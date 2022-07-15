@@ -1,0 +1,8 @@
+{
+    // "endOfLine": "auto",
+    "extends": "@rocketseat/eslint-config/react",
+    "rules": {
+        "no-unused-vars": "off"
+        // "endOfLine": "auto"
+    }
+}
