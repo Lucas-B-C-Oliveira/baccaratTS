@@ -55,8 +55,20 @@ import configDisabledBgBtn from '../../assets/control/config/config-btn-disabled
 import closeBgBtn from '../../assets/control/close/close-btn.png'
 import closePressedBgBtn from '../../assets/control/close/close-btn-pressed.png'
 import closeDisabledBgBtn from '../../assets/control/close/close-btn-disabled.png'
+import { ScoreContext } from '../../context/ScoreContext'
+import { BallTypes } from '../Scoreboard'
+import { useContext } from 'react'
 
 export function Control() {
+  const { addBallsInScore } = useContext(ScoreContext)
+
+  function handleAddPlayerBall() {
+    addBallsInScore(BallTypes.PLAYER)
+  }
+  function handleAddBankerBall() {
+    addBallsInScore(BallTypes.BANKER)
+  }
+
   return (
     <ControlContainer>
       <TopContainer>
@@ -64,11 +76,13 @@ export function Control() {
           backgroundImageNormal={playerBgBtn}
           backgroundImagePressed={playerPressedBgBtn}
           backgroundImageDisabled={playerDisabledBgBtn}
+          onClick={handleAddPlayerBall}
         />
         <TopButton
           backgroundImageNormal={bankerBgBtn}
           backgroundImagePressed={bankerPressedBgBtn}
           backgroundImageDisabled={bankerDisabledBgBtn}
+          onClick={handleAddBankerBall}
         />
       </TopContainer>
 

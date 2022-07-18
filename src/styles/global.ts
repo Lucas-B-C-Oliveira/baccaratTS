@@ -5,6 +5,7 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    border: none;
   }
   :focus {
     outline: none;
@@ -12,7 +13,6 @@ export const GlobalStyles = createGlobalStyle`
   body {
     background: ${(props) => props.theme['gray-600']}; //! TODO: Remove this
 
-    color: ${(props) => props.theme['gray-300']};
     -webkit-font-smoothing: antialiased;
   }
   body, input, textarea, button {
