@@ -57,16 +57,111 @@ import closePressedBgBtn from '../../assets/control/close/close-btn-pressed.png'
 import closeDisabledBgBtn from '../../assets/control/close/close-btn-disabled.png'
 import { ScoreContext } from '../../context/ScoreContext'
 import { BallTypes } from '../Scoreboard'
-import { useContext } from 'react'
+import { useContext, useRef, useState } from 'react'
+
+enum ButtonsName {
+  PLAYER = 'player',
+  BANKER = 'banker',
+  PLAYER_8 = 'player8',
+  PLAYER_9 = 'player9',
+  BANKER_8 = 'banker8',
+  BANKER_9 = 'banker9',
+  TIE_HANDS = 'tieHands',
+  CANCEL_LAST_PLAY = 'cancelLastPlay',
+  CANCEL = 'cancel',
+  CLEAR_SHOE = 'clearShoe',
+  CONFIG = 'config',
+  CLOSE = 'close',
+  DEFAULT = ''
+}
 
 export function Control() {
   const { addBallsInScore } = useContext(ScoreContext)
+  const [disabledState, setDisabledState] = useState(false)
+  const buttonOnConfirmation = useRef<ButtonsName>(ButtonsName.DEFAULT)
 
-  function handleAddPlayerBall() {
-    addBallsInScore(BallTypes.PLAYER)
+  function setDisableButtonsState(isInConfirmation: boolean, buttonToIgnore: ButtonsName = ButtonsName.DEFAULT) {
+    buttonOnConfirmation.current = buttonToIgnore
+    setDisabledState(!isInConfirmation)
   }
-  function handleAddBankerBall() {
-    addBallsInScore(BallTypes.BANKER)
+
+  /// Handle Functions ######
+  function handleCancelButton() { setDisableButtonsState(true) }
+
+  function handleCancelLastButton() {
+    // setDisableButtonsState(true)
+    console.log('CancelLast button clicked')
+    //! TODO: Need Implemented here
+  }
+
+
+  function handleClearShoeButton() {
+    // setDisableButtonsState(true)
+    console.log('ClearShoe button clicked')
+    //! TODO: Need Implemented here
+  }
+
+
+  function handleConfigButton() {
+    // setDisableButtonsState(true)
+    console.log('Config button clicked')
+    //! TODO: Need Implemented here
+  }
+
+
+  function handleCloseButton() {
+    // setDisableButtonsState(true)
+    console.log('CancelLast button clicked')
+    //! TODO: Need Implemented here
+  }
+
+  function handlePlayerButton() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.PLAYER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.PLAYER)
+  }
+
+  function handleBankerButton() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.BANKER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.BANKER)
+  }
+
+  function handleTieHandsButton() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.TIE_HANDS)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.TIE_HANDS)
+  }
+
+  function handlePlayer8Button() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.PLAYER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.PLAYER_8)
+  }
+
+  function handlePlayer9Button() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.PLAYER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.PLAYER_9)
+  }
+
+  function handleBanker8Button() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.BANKER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.BANKER_8)
+  }
+
+  function handleBanker9Button() {
+    if (disabledState) {
+      addBallsInScore(BallTypes.BANKER)
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.BANKER_9)
   }
 
   return (
@@ -76,13 +171,15 @@ export function Control() {
           backgroundImageNormal={playerBgBtn}
           backgroundImagePressed={playerPressedBgBtn}
           backgroundImageDisabled={playerDisabledBgBtn}
-          onClick={handleAddPlayerBall}
+          onClick={handlePlayerButton}
+          disabled={buttonOnConfirmation.current !== ButtonsName.PLAYER ? disabledState : !disabledState}
         />
         <TopButton
           backgroundImageNormal={bankerBgBtn}
           backgroundImagePressed={bankerPressedBgBtn}
           backgroundImageDisabled={bankerDisabledBgBtn}
-          onClick={handleAddBankerBall}
+          onClick={handleBankerButton}
+          disabled={buttonOnConfirmation.current !== ButtonsName.BANKER ? disabledState : !disabledState}
         />
       </TopContainer>
 
@@ -91,11 +188,15 @@ export function Control() {
           backgroundImageNormal={player8BgBtn}
           backgroundImagePressed={player8PressedBgBtn}
           backgroundImageDisabled={player8DisabledBgBtn}
+          onClick={handlePlayer8Button}
+          disabled={buttonOnConfirmation.current !== ButtonsName.PLAYER_8 ? disabledState : !disabledState}
         />
         <MiddleButton
           backgroundImageNormal={player9BgBtn}
           backgroundImagePressed={player9PressedBgBtn}
           backgroundImageDisabled={player9DisabledBgBtn}
+          onClick={handlePlayer9Button}
+          disabled={buttonOnConfirmation.current !== ButtonsName.PLAYER_9 ? disabledState : !disabledState}
         />
         <MiddleButton
           backgroundImageNormal={tieBgBtn}
@@ -104,42 +205,68 @@ export function Control() {
           width={189}
           height={532}
           paddingTop={70}
+          onClick={handleTieHandsButton}
+          disabled={buttonOnConfirmation.current !== ButtonsName.TIE_HANDS ? disabledState : !disabledState}
         />
         <MiddleButton
           backgroundImageNormal={banker8BgBtn}
           backgroundImagePressed={banker8PressedBgBtn}
           backgroundImageDisabled={banker8DisabledBgBtn}
+          onClick={handleBanker8Button}
+          disabled={buttonOnConfirmation.current !== ButtonsName.BANKER_8 ? disabledState : !disabledState}
         />
         <MiddleButton
           backgroundImageNormal={banker9BgBtn}
           backgroundImagePressed={banker9PressedBgBtn}
           backgroundImageDisabled={banker9DisabledBgBtn}
+          onClick={handleBanker9Button}
+          disabled={buttonOnConfirmation.current !== ButtonsName.BANKER_9 ? disabledState : !disabledState}
         />
       </MiddleContainer>
 
       <BottomContainer>
-        <BottomButton
-          backgroundImageNormal={cancelLastBgBtn}
-          backgroundImagePressed={cancelLastPressedBgBtn}
-          backgroundImageDisabled={cancelLastDisabledBgBtn}
-          width={786}
-          height={245}
-          leftPosition={94.25}
-        />
+        {disabledState ? (
+          <BottomButton
+            backgroundImageNormal={cancelBgBtn}
+            backgroundImagePressed={cancelPressedBgBtn}
+            backgroundImageDisabled={cancelDisabledBgBtn}
+            width={786}
+            height={245}
+            leftPosition={94.25}
+            onClick={handleCancelButton}
+          />
+        ) : (
+          <BottomButton
+            backgroundImageNormal={cancelLastBgBtn}
+            backgroundImagePressed={cancelLastPressedBgBtn}
+            backgroundImageDisabled={cancelLastDisabledBgBtn}
+            width={786}
+            height={245}
+            leftPosition={94.25}
+            onClick={handleCancelLastButton}
+          />
+        )}
+
         <BottomButton
           backgroundImageNormal={clearShoeBgBtn}
           backgroundImagePressed={clearShoePressedBgBtn}
           backgroundImageDisabled={clearShoeDisabledBgBtn}
+          disabled={buttonOnConfirmation.current !== ButtonsName.CLEAR_SHOE ? disabledState : !disabledState}
+          onClick={handleClearShoeButton}
         />
         <BottomButton
           backgroundImageNormal={configBgBtn}
           backgroundImagePressed={configPressedBgBtn}
           backgroundImageDisabled={configDisabledBgBtn}
+          disabled={buttonOnConfirmation.current !== ButtonsName.CONFIG ? disabledState : !disabledState}
+          onClick={handleConfigButton}
         />
         <BottomButton
           backgroundImageNormal={closeBgBtn}
           backgroundImagePressed={closePressedBgBtn}
           backgroundImageDisabled={closeDisabledBgBtn}
+          disabled={buttonOnConfirmation.current !== ButtonsName.CLOSE ? disabledState : !disabledState}
+          onClick={handleCloseButton}
         />
       </BottomContainer>
     </ControlContainer>

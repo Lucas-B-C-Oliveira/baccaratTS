@@ -36,7 +36,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   /// ### Bottom Ball's variables
   const rowOfBottom = useRef(0)
   const columnOfBottom = useRef(0)
-  const previousBottomBall = useRef(0)
+  const previousBottomBall = useRef<undefined | number>(undefined)
   const lastLockedBottomRow = useRef(7)
   const lastLockedBottomColumn = useRef(0)
   const needLockANewRow = useRef(false)
