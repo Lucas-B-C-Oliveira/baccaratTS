@@ -1,5 +1,12 @@
 import create from 'zustand'
 
+
+interface Bar {
+  key: number
+  x: number
+  y: number
+}
+
 interface Ball {
   key: number
   position: {
@@ -7,6 +14,7 @@ interface Ball {
     y: number
   }
   image: number
+  bars: Bar[]
 }
 
 interface Score {
@@ -15,9 +23,11 @@ interface Score {
   addBallTopOfScore: (newBall: Ball) => void
   addBallBottomOfScore: (newBall: Ball) => void
   setBallBottomOfScore: (newBall: Ball) => void
+  setBallTopOfScore: (newBall: Ball) => void
+  addBarToPreviousBottomBall: (newBar: Bar) => void
 }
 
-export const useScoreStore = create<Score>((set) => ({
+export const useScoreStore = create<Score>((set, get) => ({
   ballsTop: [],
   ballsBottom: [],
 
@@ -34,8 +44,27 @@ export const useScoreStore = create<Score>((set) => ({
   },
 
   setBallBottomOfScore: (newBall: Ball) => {
-    set((state) => ({
+    set(() => ({
       ballsBottom: [newBall],
     }))
   },
+
+  setBallTopOfScore: (newBall: Ball) => {
+    set(() => ({
+      ballsTop: [newBall],
+    }))
+  },
+
+  addBarToPreviousBottomBall: (newBar: Bar) => {
+    const lastIndex: Ball | undefined = get().ballsBottom.pop()
+
+    if (lastIndex) {
+      lastIndex.bars = [...lastIndex.bars, newBar]
+
+      set((state) => ({
+        ballsBottom: [...state.ballsBottom, lastIndex]
+      }))
+    }
+  },
+
 }))

@@ -131,35 +131,35 @@ export function Control() {
 
   function handleTieHandsButton() {
     if (disabledState) {
-      addBallsInScore(BallTypes.TIE_HANDS)
+      addBallsInScore(BallTypes.TIE_HANDS_BALL)
       setDisableButtonsState(true)
     } else setDisableButtonsState(false, ButtonsName.TIE_HANDS)
   }
 
   function handlePlayer8Button() {
     if (disabledState) {
-      addBallsInScore(BallTypes.PLAYER)
+      addBallsInScore(BallTypes.PLAYER_8)
       setDisableButtonsState(true)
     } else setDisableButtonsState(false, ButtonsName.PLAYER_8)
   }
 
   function handlePlayer9Button() {
     if (disabledState) {
-      addBallsInScore(BallTypes.PLAYER)
+      addBallsInScore(BallTypes.PLAYER_9)
       setDisableButtonsState(true)
     } else setDisableButtonsState(false, ButtonsName.PLAYER_9)
   }
 
   function handleBanker8Button() {
     if (disabledState) {
-      addBallsInScore(BallTypes.BANKER)
+      addBallsInScore(BallTypes.BANKER_8)
       setDisableButtonsState(true)
     } else setDisableButtonsState(false, ButtonsName.BANKER_8)
   }
 
   function handleBanker9Button() {
     if (disabledState) {
-      addBallsInScore(BallTypes.BANKER)
+      addBallsInScore(BallTypes.BANKER_9)
       setDisableButtonsState(true)
     } else setDisableButtonsState(false, ButtonsName.BANKER_9)
   }
