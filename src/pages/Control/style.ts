@@ -34,7 +34,7 @@ export const TopButton = styled.button<ControlButtons>`
     background: url(${(props) => props.backgroundImageDisabled});
   }
 
-  &:active {
+  &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
   }
 `
@@ -74,7 +74,7 @@ export const MiddleButton = styled.button<ControlButtons>`
     background: url(${(props) => props.backgroundImageDisabled});
   }
 
-  &:active {
+  &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
   }
 `
@@ -115,7 +115,7 @@ export const BottomButton = styled.button<ControlButtons>`
     background: url(${(props) => props.backgroundImageDisabled});
   }
 
-  &:active {
+  &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
   }
 `
