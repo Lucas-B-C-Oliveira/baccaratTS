@@ -1,6 +1,5 @@
 import create from 'zustand'
 
-
 interface Bar {
   key: number
   x: number
