@@ -1,4 +1,4 @@
-import { BankerBarDiv, OuterBarDiv, PlayerBarDiv, TieHandsBarDiv } from "./style"
+import { BankerBarDiv, OuterBarDiv, PlayerBarDiv, TieHandsBarDiv } from "./styles"
 
 interface BarProps {
   position: {

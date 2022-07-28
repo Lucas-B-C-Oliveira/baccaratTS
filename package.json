@@ -13,8 +13,6 @@
     "electron": "electron ."
   },
   "dependencies": {
-    "electron-multi-monitor": "^1.0.0",
-    "electron-multi-monitor-react": "^1.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^5.3.5",
