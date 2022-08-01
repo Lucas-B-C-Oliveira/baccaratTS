@@ -57,7 +57,8 @@ import closePressedBgBtn from '../../assets/control/close/close-btn-pressed.png'
 import closeDisabledBgBtn from '../../assets/control/close/close-btn-disabled.png'
 import { ScoreContext } from '../../context/ScoreContext'
 import { BallTypes } from '../Scoreboard'
-import { useContext, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
 
 enum ButtonsName {
   PLAYER = 'player',
@@ -76,9 +77,19 @@ enum ButtonsName {
 }
 
 export function Control() {
-  const { addBallsInScore } = useContext(ScoreContext)
+
   const [disabledState, setDisabledState] = useState(false)
   const buttonOnConfirmation = useRef<ButtonsName>(ButtonsName.DEFAULT)
+
+  const socket = useRef<null | Socket>(null)
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:9013", { forceNew: true, multiplex: false, query: { "my-key": "control" } })
+  }, [])
+
+  function addBallsInScore(ball: number) {
+    if (socket.current) socket.current.emit("add balls in score", ball)
+  }
 
   function setDisableButtonsState(isInConfirmation: boolean, buttonToIgnore: ButtonsName = ButtonsName.DEFAULT) {
     buttonOnConfirmation.current = buttonToIgnore
@@ -94,13 +105,11 @@ export function Control() {
     //! TODO: Need Implemented here
   }
 
-
   function handleClearShoeButton() {
     // setDisableButtonsState(true)
     console.log('ClearShoe button clicked')
     //! TODO: Need Implemented here
   }
-
 
   function handleConfigButton() {
     // setDisableButtonsState(true)

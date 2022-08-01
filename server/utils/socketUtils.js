@@ -1,5 +1,5 @@
 const socketIO = require('socket.io')
-
+//! TODO: Remove the console.logs
 exports.sio = (server) => {
   return socketIO(server, {
     transport: ["polling"],
@@ -12,15 +12,12 @@ exports.sio = (server) => {
 exports.connection = (io) => {
 
   io.on("connection", (socket) => {
-    console.log('A user is connected')
-
+    console.log('a user is connected', socket.id)
 
     socket.on('add balls in score', (ball) => {
-      console.log("add balls in score IS CALLED! ")
-      // io.emit('add ball in score', ball);
-      socket.broadcast.emit('add ball in score', ball);
+      console.log("(add balls in score) IS CALLED! for:", socket.id)
+      io.emit('add ball', ball);
     });
-
 
     socket.on("message", (message) => {
       console.log(`message from ${socket.id} : ${message}`)

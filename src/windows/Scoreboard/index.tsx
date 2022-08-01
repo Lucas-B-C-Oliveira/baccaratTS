@@ -10,8 +10,9 @@ import Player9 from '../../assets/scoreboard/player-9.png'
 import Banker8 from '../../assets/scoreboard/banker-8.png'
 import Banker9 from '../../assets/scoreboard/banker-9.png'
 import { ScoreBar } from './components/ScoreBar'
-import { useContext } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { ScoreContext } from './../../context/ScoreContext';
+import { io, Socket } from 'socket.io-client' //! TODO: Remove this!
 
 export const ballsImages = [Banker, Player, TieHandsBall, Player8, Player9, Banker8, Banker9]
 
@@ -29,6 +30,8 @@ export enum BallTypes {
 export function Scoreboard() {
   const ballsTop = useScoreStore((state) => state.ballsTop)
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
+  const socket = useRef<null | Socket>(null)
+  const calls = useRef(0)
 
   const FONT_SIZE_OF_MAIN_BAR = 3
   const HEIGHT_OF_MAIN_BAR = 3.375
@@ -61,6 +64,8 @@ export function Scoreboard() {
   }
 
   const {
+    addBallsInScore,
+
     /// Main Bar Variables
     fillOfBankerBar,
     fillOfPlayerBar,
@@ -93,6 +98,22 @@ export function Scoreboard() {
     textOfPlayerAntepenultBar,
     textOfTieHandsAntepenultBar,
   } = useContext(ScoreContext)
+
+  useEffect(() => {
+    socket.current = io("ws://localhost:9013", { forceNew: true })
+
+    socket.current.on("add ball", (ball: number) => {
+      calls.current = calls.current + 1
+
+      if (calls.current === 1) {
+        addBallsInScore(ball)
+      }
+      else if (calls.current > 1) {
+        calls.current = 0
+      }
+    })
+
+  }, [])
 
   return (
     <ScoreboardContainer>

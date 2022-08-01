@@ -14,6 +14,7 @@ const server = http.createServer(app)
 const io = socketUtils.sio(server)
 socketUtils.connection(io)
 
+//! TODO: Remove socketIOMiddleware!
 const socketIOMiddleware = (req, res, next) => {
   req.io = io
   next()
@@ -22,12 +23,15 @@ const socketIOMiddleware = (req, res, next) => {
 /// CORS
 app.use(cors())
 
-/// ROUTES
 
-app.use('/api/v1/hello', socketIOMiddleware, (req, res) => {
-  req.io.emit("message", `Hello ${req.originalUrl}`)
-  res.send('hello world!!!')
-})
+//! TODO: Remove ROUTES!
+
+// /// ROUTES
+
+// app.use('/api/add-ball', socketIOMiddleware, (req, res) => {
+//   req.io.emit("message", `Hello ${req.originalUrl}`)
+//   res.send('hello world!!!')
+// })
 
 /// LISTEN
 const port = process.env.PORT || 8000

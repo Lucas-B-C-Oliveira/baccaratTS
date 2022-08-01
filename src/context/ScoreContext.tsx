@@ -1,6 +1,6 @@
 import { useScoreStore } from '../stores/score'
 import { createContext, ReactNode, useEffect, useReducer, useRef } from 'react'
-import { BallTypes } from '../pages/Scoreboard'
+import { BallTypes } from '../windows/Scoreboard'
 
 interface ScoreContextType {
   addBallsInScore: (newBall: number) => void
@@ -133,7 +133,6 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const textOfBankerAntepenultBar = useRef<number>(0)
   const textOfPlayerAntepenultBar = useRef<number>(0)
   const textOfTieHandsAntepenultBar = useRef<number>(0)
-
 
 
   function addBallsInScore(newBall: number) {
