@@ -2,7 +2,7 @@
   "name": "baccarat",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "main": "main.js",
   "productName": "Baccarat with React Electron",
   "scripts": {
@@ -11,7 +11,10 @@
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx",
     "lintFix": "eslint src --ext .ts,.tsx --fix",
-    "electron": "electron ."
+    "electron": "electron .",
+    "esbuild-cjs": "esbuild main.js --format=cjs --outfile=./dist/main.js",
+    "electron:dev": "npm run esbuild-cjs && electron .",
+    "electron:build": "npm run esbuild-cjs && electron-packager --out=release ."
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -29,6 +32,8 @@
     "@vitejs/plugin-react": "^2.0.0",
     "electron": "^19.0.9",
     "electron-builder": "^23.3.3",
+    "electron-packager": "^15.5.1",
+    "esbuild": "^0.14.51",
     "eslint": "^8.19.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
