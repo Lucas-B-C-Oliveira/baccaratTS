@@ -55,10 +55,10 @@ import configDisabledBgBtn from '../../assets/control/config/config-btn-disabled
 import closeBgBtn from '../../assets/control/close/close-btn.png'
 import closePressedBgBtn from '../../assets/control/close/close-btn-pressed.png'
 import closeDisabledBgBtn from '../../assets/control/close/close-btn-disabled.png'
-import { ScoreContext } from '../../context/ScoreContext'
 import { BallTypes } from '../Scoreboard'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
+
 
 enum ButtonsName {
   PLAYER = 'player',
@@ -84,7 +84,7 @@ export function Control() {
   const socket = useRef<null | Socket>(null)
 
   useEffect(() => {
-    socket.current = io("ws://localhost:9013", { forceNew: true, multiplex: false, query: { "my-key": "control" } })
+    socket.current = io("ws://localhost:9014", { forceNew: true, multiplex: false, query: { "my-key": "control" } })
   }, [])
 
   function addBallsInScore(ball: number) {

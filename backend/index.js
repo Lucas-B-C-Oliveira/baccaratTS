@@ -8,7 +8,7 @@ dotenv.config({
 
 const express = require('express')
 const app = express()
-const socketUtils = require('./utils/socketUtils')
+const socketUtils = require('./socketUtils.js')
 
 const server = http.createServer(app)
 const io = socketUtils.sio(server)
@@ -34,7 +34,8 @@ app.use(cors())
 // })
 
 /// LISTEN
-const port = process.env.PORT || 8000
+// const port = process.env.PORT || 8000
+const port = 9014 //TODO: implement a env variable for port connected with react vite
 server.listen(port, () => {
   console.log(`App running on port ${port}...`)
 })

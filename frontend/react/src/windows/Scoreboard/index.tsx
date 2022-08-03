@@ -100,7 +100,7 @@ export function Scoreboard() {
   } = useContext(ScoreContext)
 
   useEffect(() => {
-    socket.current = io("ws://localhost:9013", { forceNew: true })
+    socket.current = io("ws://localhost:9014", { forceNew: true })
 
     socket.current.on("add ball", (ball: number) => {
       calls.current = calls.current + 1

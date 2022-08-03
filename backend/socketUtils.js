@@ -1,5 +1,5 @@
 const socketIO = require('socket.io')
-//! TODO: Remove the console.logs
+
 exports.sio = (server) => {
   return socketIO(server, {
     transport: ["polling"],

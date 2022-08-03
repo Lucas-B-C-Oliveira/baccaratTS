@@ -3,18 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
-  "main": "main.js",
-  "productName": "Baccarat with React Electron",
+  "main": "./electron/main.js",
+  "productName": "Baccarat",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "vite ./react",
+    "build": "tsc ./react/vite.config.ts && vite build ./react",
+    "preview": "vite preview ./react",
     "lint": "eslint src --ext .ts,.tsx",
     "lintFix": "eslint src --ext .ts,.tsx --fix",
     "electron": "electron .",
-    "esbuild-cjs": "esbuild main.js --format=cjs --outfile=./dist/main.js",
+    "esbuild-cjs": "esbuild ./electron/main.js --format=cjs --outfile=./dist/main.js",
     "electron:dev": "npm run esbuild-cjs && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-packager --out=release ."
+    "electron:build": "npm run esbuild-cjs && electron-packager --out=../build .",
+    "build:all": "npm run build && npm run electron:build"
   },
   "dependencies": {
     "react": "^18.2.0",
