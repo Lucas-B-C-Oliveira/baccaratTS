@@ -40,11 +40,17 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const addBallTopOfScore = useScoreStore((state) => state.addBallTopOfScore)
   const setBallTopOfScore = useScoreStore((state) => state.setBallTopOfScore)
 
-  const addBallBottomOfScore = useScoreStore((state) => state.addBallBottomOfScore)
-  const setBallBottomOfScore = useScoreStore((state) => state.setBallBottomOfScore)
-  const addBarToPreviousBottomBall = useScoreStore((state) => state.addBarToPreviousBottomBall)
+  const addBallBottomOfScore = useScoreStore(
+    (state) => state.addBallBottomOfScore,
+  )
+  const setBallBottomOfScore = useScoreStore(
+    (state) => state.setBallBottomOfScore,
+  )
+  const addBarToPreviousBottomBall = useScoreStore(
+    (state) => state.addBarToPreviousBottomBall,
+  )
 
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0); ///For Bar
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0) /// For Bar
 
   const currentMatch = useRef(0)
 
@@ -104,8 +110,12 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     textOfTieHandsBar: 0,
   }
 
-  const previousValuesOfTheLastBars = useRef([MODEL_OF_BARS_VARIABLES, MODEL_OF_BARS_VARIABLES,
-    MODEL_OF_BARS_VARIABLES, MODEL_OF_BARS_VARIABLES])
+  const previousValuesOfTheLastBars = useRef([
+    MODEL_OF_BARS_VARIABLES,
+    MODEL_OF_BARS_VARIABLES,
+    MODEL_OF_BARS_VARIABLES,
+    MODEL_OF_BARS_VARIABLES,
+  ])
 
   /// # Last Bar
   const fillOfBankerLastBar = useRef<number>(0)
@@ -134,28 +144,31 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const textOfPlayerAntepenultBar = useRef<number>(0)
   const textOfTieHandsAntepenultBar = useRef<number>(0)
 
-
   function addBallsInScore(newBall: number) {
-    if (newBall === BallTypes.TIE_HANDS_BALL && numberOfBarsInPreviousBall.current >= 6) return
+    if (
+      newBall === BallTypes.TIE_HANDS_BALL &&
+      numberOfBarsInPreviousBall.current >= 6
+    )
+      return
 
     let newBallTop = newBall
     switch (newBallTop) {
       case BallTypes.PLAYER_8:
         newBallTop = BallTypes.PLAYER
-        break;
+        break
       case BallTypes.PLAYER_9:
         newBallTop = BallTypes.PLAYER
-        break;
+        break
       case BallTypes.BANKER_8:
         newBallTop = BallTypes.BANKER
-        break;
+        break
       case BallTypes.BANKER_9:
         newBallTop = BallTypes.BANKER
-        break;
+        break
 
       default:
         newBallTop = newBall
-        break;
+        break
     }
 
     numberOfBallsInGame.current = numberOfBallsInGame.current + 1
@@ -167,7 +180,6 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   }
 
   function addTopBall(newBall: number) {
-
     if (currentMatch.current % 6 === 0 && currentMatch.current !== 0) {
       columnOfTop.current = columnOfTop.current + 1
       rowOfTop.current = 0
@@ -200,7 +212,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       key: Math.random() * Math.random() * Math.random() + currentMatch.current, /// TODO: use lib for make key
       position: newTopPosition,
       image: newBall,
-      bars: []
+      bars: [],
     }
     if (cleanTopBalls) setBallTopOfScore(newTopBall)
     else addBallTopOfScore(newTopBall)
@@ -211,13 +223,17 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     let newYBottomPosition = 0
 
     if (newBall === BallTypes.TIE_HANDS_BALL) {
-      numberOfBarsInPreviousBall.current = numberOfBarsInPreviousBall.current + 1
+      numberOfBarsInPreviousBall.current =
+        numberOfBarsInPreviousBall.current + 1
 
-      let newXBarPosition: number = START_POSITION_X_FOR_BOTTOM_BAR
-      let newYBarPosition: number = START_POSITION_Y_FOR_BOTTOM_BAR - (BOTTOM_BAR_MULTIPLIER_FOR_Y * numberOfBarsInPreviousBall.current)
+      const newXBarPosition: number = START_POSITION_X_FOR_BOTTOM_BAR
+      const newYBarPosition: number =
+        START_POSITION_Y_FOR_BOTTOM_BAR -
+        BOTTOM_BAR_MULTIPLIER_FOR_Y * numberOfBarsInPreviousBall.current
 
       const newBar = {
-        key: Math.random() * Math.random() * Math.random() + currentMatch.current, /// TODO: use lib for make key
+        key:
+          Math.random() * Math.random() * Math.random() + currentMatch.current, /// TODO: use lib for make key
         x: newXBarPosition,
         y: newYBarPosition,
       }
@@ -232,20 +248,20 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     switch (newBall) {
       case BallTypes.PLAYER_8:
         newBall = BallTypes.PLAYER
-        break;
+        break
       case BallTypes.PLAYER_9:
         newBall = BallTypes.PLAYER
-        break;
+        break
       case BallTypes.BANKER_8:
         newBall = BallTypes.BANKER
-        break;
+        break
       case BallTypes.BANKER_9:
         newBall = BallTypes.BANKER
-        break;
+        break
       default:
         modifiedBottomBall.current = BallTypes.DEFAULT
         newBall = newBall
-        break;
+        break
     }
 
     if (previousBottomBall.current === newBall) {
@@ -298,7 +314,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         needLockANewRow.current = false
       }
 
-      columnOfBottom.current = currentMatch.current === 0 ? 0 : columnOfBottom.current = columnOfBottom.current + 1
+      columnOfBottom.current =
+        currentMatch.current === 0
+          ? 0
+          : (columnOfBottom.current = columnOfBottom.current + 1)
 
       newYBottomPosition =
         START_POSITION_Y_FOR_BOTTOM_BALL +
@@ -339,8 +358,11 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     const newBottomBall = {
       key: Math.random() * Math.random() * Math.random() + currentMatch.current, /// TODO: use lib for make key
       position: newBottomPosition,
-      image: modifiedBottomBall.current === BallTypes.DEFAULT ? newBall : modifiedBottomBall.current,
-      bars: []
+      image:
+        modifiedBottomBall.current === BallTypes.DEFAULT
+          ? newBall
+          : modifiedBottomBall.current,
+      bars: [],
     }
     previousBottomBall.current = newBall
 
@@ -348,30 +370,48 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     else addBallBottomOfScore(newBottomBall)
   }
 
-  function updateBar(newBall = -1, numberOfBallsInGame = 0, isFirstRender = false) {
-
+  function updateBar(
+    newBall = -1,
+    numberOfBallsInGame = 0,
+    isFirstRender = false,
+  ) {
     switch (newBall) {
       case 0:
-        numberOfBankerBallsInGame.current = numberOfBankerBallsInGame.current + 1
-        break;
+        numberOfBankerBallsInGame.current =
+          numberOfBankerBallsInGame.current + 1
+        break
       case 1:
-        numberOfPlayerBallsInGame.current = numberOfPlayerBallsInGame.current + 1
-        break;
+        numberOfPlayerBallsInGame.current =
+          numberOfPlayerBallsInGame.current + 1
+        break
       case 2:
-        numberOfTieHandsBallsInGame.current = numberOfTieHandsBallsInGame.current + 1
-        break;
+        numberOfTieHandsBallsInGame.current =
+          numberOfTieHandsBallsInGame.current + 1
+        break
     }
 
-    fillOfBankerBar.current = numberOfBallsInGame !== 0 ? (numberOfBankerBallsInGame.current * 100) / numberOfBallsInGame : 0
-    fillOfPlayerBar.current = numberOfBallsInGame !== 0 ? (numberOfPlayerBallsInGame.current * 100) / numberOfBallsInGame : 0
-    fillOfTieHandsBar.current = numberOfBallsInGame !== 0 ? (numberOfTieHandsBallsInGame.current * 100) / numberOfBallsInGame : 0
+    fillOfBankerBar.current =
+      numberOfBallsInGame !== 0
+        ? (numberOfBankerBallsInGame.current * 100) / numberOfBallsInGame
+        : 0
+    fillOfPlayerBar.current =
+      numberOfBallsInGame !== 0
+        ? (numberOfPlayerBallsInGame.current * 100) / numberOfBallsInGame
+        : 0
+    fillOfTieHandsBar.current =
+      numberOfBallsInGame !== 0
+        ? (numberOfTieHandsBallsInGame.current * 100) / numberOfBallsInGame
+        : 0
 
     textOfBankerBar.current = fillOfBankerBar.current
     textOfPlayerBar.current = fillOfPlayerBar.current
     textOfTieHandsBar.current = fillOfTieHandsBar.current
 
-
-    if (fillOfBankerBar.current === 0 || fillOfPlayerBar.current === 0 || fillOfTieHandsBar.current === 0) {
+    if (
+      fillOfBankerBar.current === 0 ||
+      fillOfPlayerBar.current === 0 ||
+      fillOfTieHandsBar.current === 0
+    ) {
       let numberOfEmptyBarFills = 0
       let numberOfBarsALittleFilled = 0
 
@@ -379,38 +419,88 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       let canIPutZeroInFillOfPlayerForBar = false
       let canIPutZeroInFillOfTieForBar = false
 
-      if (fillOfBankerBar.current === 0) numberOfEmptyBarFills++; else numberOfBarsALittleFilled++
-      if (fillOfPlayerBar.current === 0) numberOfEmptyBarFills++; else numberOfBarsALittleFilled++
-      if (fillOfTieHandsBar.current === 0) numberOfEmptyBarFills++; else numberOfBarsALittleFilled++
+      if (fillOfBankerBar.current === 0) numberOfEmptyBarFills++
+      else numberOfBarsALittleFilled++
+      if (fillOfPlayerBar.current === 0) numberOfEmptyBarFills++
+      else numberOfBarsALittleFilled++
+      if (fillOfTieHandsBar.current === 0) numberOfEmptyBarFills++
+      else numberOfBarsALittleFilled++
 
-
-      if ((fillOfBankerBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))) >= fillOfBankerBar.current) {
-        fillOfBankerBar.current = fillOfBankerBar.current === 0 ? VISUAL_LIMIT_OF_BAR_FILL : fillOfBankerBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))
-      }
-      else {
-        if (fillOfBankerBar.current === 0) { fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL; canIPutZeroInFillOfBankerForBar = true }
-        else if (fillOfBankerBar.current < VISUAL_LIMIT_OF_BAR_FILL) fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
-      }
-
-      if ((fillOfPlayerBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))) >= fillOfPlayerBar.current) {
-        fillOfPlayerBar.current = fillOfPlayerBar.current === 0 ? VISUAL_LIMIT_OF_BAR_FILL : fillOfPlayerBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))
-      }
-      else {
-        if (fillOfPlayerBar.current === 0) { fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL; canIPutZeroInFillOfPlayerForBar = true }
-        else if (fillOfPlayerBar.current < VISUAL_LIMIT_OF_BAR_FILL) fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
-      }
-
-      if ((fillOfTieHandsBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))) >= fillOfTieHandsBar.current) {
-        fillOfTieHandsBar.current = fillOfTieHandsBar.current === 0 ? VISUAL_LIMIT_OF_BAR_FILL : fillOfTieHandsBar.current - (numberOfEmptyBarFills * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled))
-      }
-      else {
-        if (fillOfTieHandsBar.current === 0) { fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL; canIPutZeroInFillOfTieForBar = true }
-        else if (fillOfTieHandsBar.current < VISUAL_LIMIT_OF_BAR_FILL) fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL
+      if (
+        fillOfBankerBar.current -
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        fillOfBankerBar.current
+      ) {
+        fillOfBankerBar.current =
+          fillOfBankerBar.current === 0
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfBankerBar.current -
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+      } else {
+        if (fillOfBankerBar.current === 0) {
+          fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
+          canIPutZeroInFillOfBankerForBar = true
+        } else if (fillOfBankerBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+          fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
       }
 
-      if (fillOfBankerBar.current === VISUAL_LIMIT_OF_BAR_FILL && canIPutZeroInFillOfBankerForBar) textOfBankerBar.current = 0
-      if (fillOfPlayerBar.current === VISUAL_LIMIT_OF_BAR_FILL && canIPutZeroInFillOfPlayerForBar) textOfPlayerBar.current = 0
-      if (fillOfTieHandsBar.current === VISUAL_LIMIT_OF_BAR_FILL && canIPutZeroInFillOfTieForBar) textOfTieHandsBar.current = 0
+      if (
+        fillOfPlayerBar.current -
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        fillOfPlayerBar.current
+      ) {
+        fillOfPlayerBar.current =
+          fillOfPlayerBar.current === 0
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfPlayerBar.current -
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+      } else {
+        if (fillOfPlayerBar.current === 0) {
+          fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
+          canIPutZeroInFillOfPlayerForBar = true
+        } else if (fillOfPlayerBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+          fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
+      }
+
+      if (
+        fillOfTieHandsBar.current -
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        fillOfTieHandsBar.current
+      ) {
+        fillOfTieHandsBar.current =
+          fillOfTieHandsBar.current === 0
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfTieHandsBar.current -
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+      } else {
+        if (fillOfTieHandsBar.current === 0) {
+          fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL
+          canIPutZeroInFillOfTieForBar = true
+        } else if (fillOfTieHandsBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+          fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL
+      }
+
+      if (
+        fillOfBankerBar.current === VISUAL_LIMIT_OF_BAR_FILL &&
+        canIPutZeroInFillOfBankerForBar
+      )
+        textOfBankerBar.current = 0
+      if (
+        fillOfPlayerBar.current === VISUAL_LIMIT_OF_BAR_FILL &&
+        canIPutZeroInFillOfPlayerForBar
+      )
+        textOfPlayerBar.current = 0
+      if (
+        fillOfTieHandsBar.current === VISUAL_LIMIT_OF_BAR_FILL &&
+        canIPutZeroInFillOfTieForBar
+      )
+        textOfTieHandsBar.current = 0
 
       if (numberOfEmptyBarFills === 3) {
         fillOfBankerBar.current = 33.3399
@@ -421,83 +511,147 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         textOfPlayerBar.current = 0
         textOfTieHandsBar.current = 0
       }
-    }
-    else if (fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL || fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL || fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL) {
+    } else if (
+      fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ||
+      fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ||
+      fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+    ) {
       let numberOfBarsWithFillLessThanTen = 0
       let numberOfBarsWithFillGreaterThanTen = 0
 
-      if (fillOfBankerBar.current < VISUAL_LIMIT_OF_BAR_FILL) numberOfBarsWithFillLessThanTen++; else numberOfBarsWithFillGreaterThanTen++
-      if (fillOfPlayerBar.current < VISUAL_LIMIT_OF_BAR_FILL) numberOfBarsWithFillLessThanTen++; else numberOfBarsWithFillGreaterThanTen++
-      if (fillOfTieHandsBar.current < VISUAL_LIMIT_OF_BAR_FILL) numberOfBarsWithFillLessThanTen++; else numberOfBarsWithFillGreaterThanTen++
+      if (fillOfBankerBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+        numberOfBarsWithFillLessThanTen++
+      else numberOfBarsWithFillGreaterThanTen++
+      if (fillOfPlayerBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+        numberOfBarsWithFillLessThanTen++
+      else numberOfBarsWithFillGreaterThanTen++
+      if (fillOfTieHandsBar.current < VISUAL_LIMIT_OF_BAR_FILL)
+        numberOfBarsWithFillLessThanTen++
+      else numberOfBarsWithFillGreaterThanTen++
 
-      const differenceToRightFillingOfTheBar = numberOfBarsWithFillLessThanTen * (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsWithFillGreaterThanTen)
+      const differenceToRightFillingOfTheBar =
+        numberOfBarsWithFillLessThanTen *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsWithFillGreaterThanTen)
 
-      if (fillOfBankerBar.current - differenceToRightFillingOfTheBar >= fillOfBankerBar.current) {
-        fillOfBankerBar.current = fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfBankerBar.current - differenceToRightFillingOfTheBar
-      }
-      else {
-        fillOfBankerBar.current = fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfBankerBar.current
+      if (
+        fillOfBankerBar.current - differenceToRightFillingOfTheBar >=
+        fillOfBankerBar.current
+      ) {
+        fillOfBankerBar.current =
+          fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfBankerBar.current - differenceToRightFillingOfTheBar
+      } else {
+        fillOfBankerBar.current =
+          fillOfBankerBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfBankerBar.current
       }
 
-      if (fillOfPlayerBar.current - differenceToRightFillingOfTheBar >= fillOfPlayerBar.current) {
-        fillOfPlayerBar.current = fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfPlayerBar.current - differenceToRightFillingOfTheBar
-      }
-      else {
-        fillOfPlayerBar.current = fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfPlayerBar.current
+      if (
+        fillOfPlayerBar.current - differenceToRightFillingOfTheBar >=
+        fillOfPlayerBar.current
+      ) {
+        fillOfPlayerBar.current =
+          fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfPlayerBar.current - differenceToRightFillingOfTheBar
+      } else {
+        fillOfPlayerBar.current =
+          fillOfPlayerBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfPlayerBar.current
       }
 
-      if (fillOfTieHandsBar.current - differenceToRightFillingOfTheBar >= fillOfTieHandsBar.current) {
-        fillOfTieHandsBar.current = fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfTieHandsBar.current - differenceToRightFillingOfTheBar
-      }
-      else {
-        fillOfTieHandsBar.current = fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL ? VISUAL_LIMIT_OF_BAR_FILL : fillOfTieHandsBar.current
+      if (
+        fillOfTieHandsBar.current - differenceToRightFillingOfTheBar >=
+        fillOfTieHandsBar.current
+      ) {
+        fillOfTieHandsBar.current =
+          fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfTieHandsBar.current - differenceToRightFillingOfTheBar
+      } else {
+        fillOfTieHandsBar.current =
+          fillOfTieHandsBar.current <= VISUAL_LIMIT_OF_BAR_FILL
+            ? VISUAL_LIMIT_OF_BAR_FILL
+            : fillOfTieHandsBar.current
       }
     }
-    saveValuesOfTheBars(fillOfBankerBar.current, fillOfPlayerBar.current, fillOfTieHandsBar.current, textOfBankerBar.current, textOfPlayerBar.current, textOfTieHandsBar.current)
+    saveValuesOfTheBars(
+      fillOfBankerBar.current,
+      fillOfPlayerBar.current,
+      fillOfTieHandsBar.current,
+      textOfBankerBar.current,
+      textOfPlayerBar.current,
+      textOfTieHandsBar.current,
+    )
 
     /// ## To the Other Bars
 
-
     /// ### Last Bar
-    fillOfBankerLastBar.current = previousValuesOfTheLastBars.current[1].fillOfBankerBar
-    fillOfPlayerLastBar.current = previousValuesOfTheLastBars.current[1].fillOfPlayerBar
-    fillOfTieHandsLastBar.current = previousValuesOfTheLastBars.current[1].fillOfTieHandsBar
+    fillOfBankerLastBar.current =
+      previousValuesOfTheLastBars.current[1].fillOfBankerBar
+    fillOfPlayerLastBar.current =
+      previousValuesOfTheLastBars.current[1].fillOfPlayerBar
+    fillOfTieHandsLastBar.current =
+      previousValuesOfTheLastBars.current[1].fillOfTieHandsBar
 
-    textOfBankerLastBar.current = previousValuesOfTheLastBars.current[1].textOfBankerBar
-    textOfPlayerLastBar.current = previousValuesOfTheLastBars.current[1].textOfPlayerBar
-    textOfTieHandsLastBar.current = previousValuesOfTheLastBars.current[1].textOfTieHandsBar
+    textOfBankerLastBar.current =
+      previousValuesOfTheLastBars.current[1].textOfBankerBar
+    textOfPlayerLastBar.current =
+      previousValuesOfTheLastBars.current[1].textOfPlayerBar
+    textOfTieHandsLastBar.current =
+      previousValuesOfTheLastBars.current[1].textOfTieHandsBar
 
     /// ### Penult Bar
-    fillOfBankerPenultBar.current = previousValuesOfTheLastBars.current[2].fillOfBankerBar
-    fillOfPlayerPenultBar.current = previousValuesOfTheLastBars.current[2].fillOfPlayerBar
-    fillOfTieHandsPenultBar.current = previousValuesOfTheLastBars.current[2].fillOfTieHandsBar
+    fillOfBankerPenultBar.current =
+      previousValuesOfTheLastBars.current[2].fillOfBankerBar
+    fillOfPlayerPenultBar.current =
+      previousValuesOfTheLastBars.current[2].fillOfPlayerBar
+    fillOfTieHandsPenultBar.current =
+      previousValuesOfTheLastBars.current[2].fillOfTieHandsBar
 
-    textOfBankerPenultBar.current = previousValuesOfTheLastBars.current[2].textOfBankerBar
-    textOfPlayerPenultBar.current = previousValuesOfTheLastBars.current[2].textOfPlayerBar
-    textOfTieHandsPenultBar.current = previousValuesOfTheLastBars.current[2].textOfTieHandsBar
+    textOfBankerPenultBar.current =
+      previousValuesOfTheLastBars.current[2].textOfBankerBar
+    textOfPlayerPenultBar.current =
+      previousValuesOfTheLastBars.current[2].textOfPlayerBar
+    textOfTieHandsPenultBar.current =
+      previousValuesOfTheLastBars.current[2].textOfTieHandsBar
 
     /// ### Antepenult Bar
-    fillOfBankerAntepenultBar.current = previousValuesOfTheLastBars.current[3].fillOfBankerBar
-    fillOfPlayerAntepenultBar.current = previousValuesOfTheLastBars.current[3].fillOfPlayerBar
-    fillOfTieHandsAntepenultBar.current = previousValuesOfTheLastBars.current[3].fillOfTieHandsBar
+    fillOfBankerAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].fillOfBankerBar
+    fillOfPlayerAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].fillOfPlayerBar
+    fillOfTieHandsAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].fillOfTieHandsBar
 
-    textOfBankerAntepenultBar.current = previousValuesOfTheLastBars.current[3].textOfBankerBar
-    textOfPlayerAntepenultBar.current = previousValuesOfTheLastBars.current[3].textOfPlayerBar
-    textOfTieHandsAntepenultBar.current = previousValuesOfTheLastBars.current[3].textOfTieHandsBar
+    textOfBankerAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].textOfBankerBar
+    textOfPlayerAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].textOfPlayerBar
+    textOfTieHandsAntepenultBar.current =
+      previousValuesOfTheLastBars.current[3].textOfTieHandsBar
 
     if (isFirstRender) forceUpdate()
   }
 
-  function saveValuesOfTheBars(fillOfBankerBar: number, fillOfPlayerBar: number, fillOfTieHandsBar: number,
-    textOfBankerBar: number, textOfPlayerBar: number, textOfTieHandsBar: number) {
-
+  function saveValuesOfTheBars(
+    fillOfBankerBar: number,
+    fillOfPlayerBar: number,
+    fillOfTieHandsBar: number,
+    textOfBankerBar: number,
+    textOfPlayerBar: number,
+    textOfTieHandsBar: number,
+  ) {
     const valuesToSave = {
-      fillOfBankerBar: fillOfBankerBar,
-      fillOfPlayerBar: fillOfPlayerBar,
-      fillOfTieHandsBar: fillOfTieHandsBar,
-      textOfBankerBar: textOfBankerBar,
-      textOfPlayerBar: textOfPlayerBar,
-      textOfTieHandsBar: textOfTieHandsBar
+      fillOfBankerBar,
+      fillOfPlayerBar,
+      fillOfTieHandsBar,
+      textOfBankerBar,
+      textOfPlayerBar,
+      textOfTieHandsBar,
     }
 
     previousValuesOfTheLastBars.current.pop()

@@ -4,7 +4,8 @@
   "description": "",
   "bin": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "build": "pkg ."
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,6 @@
     "targets": [
       "node16-win-x64"
     ],
-    "outputPath": "../frontend/electron/server"
+    "outputPath": "../frontend/public/server"
   }
 }

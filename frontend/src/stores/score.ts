@@ -61,9 +61,8 @@ export const useScoreStore = create<Score>((set, get) => ({
       lastIndex.bars = [...lastIndex.bars, newBar]
 
       set((state) => ({
-        ballsBottom: [...state.ballsBottom, lastIndex]
+        ballsBottom: [...state.ballsBottom, lastIndex],
       }))
     }
   },
-
 }))

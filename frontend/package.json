@@ -3,24 +3,45 @@
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
-  "main": "./electron/main.js",
+  "main": "./public/electron.mjs",
+  "homepage": "./react/build",
   "productName": "Baccarat",
+  "author": {
+    "name": "Lucas B C Oliveira",
+    "email": "lucascoliveira819@gmail.com"
+  },
+  "description": "teste",
   "scripts": {
-    "dev": "vite ./react",
-    "build": "tsc ./react/vite.config.ts && vite build ./react",
-    "preview": "vite preview ./react",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx",
     "lintFix": "eslint src --ext .ts,.tsx --fix",
     "electron": "electron .",
-    "esbuild-cjs": "esbuild ./electron/main.js --format=cjs --outfile=./dist/main.js",
+    "esbuild-cjs": "esbuild ./public/electron.js --format=cjs --outfile=./build/electron.js",
     "electron:dev": "npm run esbuild-cjs && electron .",
-    "electron:build": "npm run esbuild-cjs && electron-packager --out=../build .",
-    "build:all": "npm run build && npm run electron:build"
+    "electron:build": "npm run esbuild-cjs && electron-packager --out=build .",
+    "build:all": "npm run build && npm run electron:build",
+    "electron:package:win": "electron-builder -w -c.extraMetadata.main=build/electron.js",
+    "react:build:electron:package:win": "npm run build && electron-builder -w -c.extraMetadata.main=build/electron.js"
+  },
+  "build": {
+    "compression": "normal",
+    "removePackageScripts": true,
+    "appId": "com.electron.baccarat",
+    "productName": "Baccarat",
+    "directories": {
+      "buildResources": "public"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ]
   },
   "dependencies": {
+    "react-router-dom": "^6.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0",
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
     "zustand": "^4.0.0-rc.1"

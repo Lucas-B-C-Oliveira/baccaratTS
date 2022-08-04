@@ -10,11 +10,19 @@ import Player9 from '../../assets/scoreboard/player-9.png'
 import Banker8 from '../../assets/scoreboard/banker-8.png'
 import Banker9 from '../../assets/scoreboard/banker-9.png'
 import { ScoreBar } from './components/ScoreBar'
-import { useContext, useEffect, useRef } from 'react';
-import { ScoreContext } from './../../context/ScoreContext';
+import { useContext, useEffect, useRef } from 'react'
+import { ScoreContext } from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client' //! TODO: Remove this!
 
-export const ballsImages = [Banker, Player, TieHandsBall, Player8, Player9, Banker8, Banker9]
+export const ballsImages = [
+  Banker,
+  Player,
+  TieHandsBall,
+  Player8,
+  Player9,
+  Banker8,
+  Banker9,
+]
 
 export enum BallTypes {
   BANKER,
@@ -45,22 +53,22 @@ export function Scoreboard() {
 
   const POSITION_OF_MAIN_BAR = {
     x: 62.7,
-    y: 16.7
+    y: 16.7,
   }
 
   const POSITION_OF_LAST_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 48.5
+    y: 48.5,
   }
 
   const POSITION_OF_PENULT_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 51.7
+    y: 51.7,
   }
 
   const POSITION_OF_ANTEPENULT_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 54.9
+    y: 54.9,
   }
 
   const {
@@ -100,20 +108,20 @@ export function Scoreboard() {
   } = useContext(ScoreContext)
 
   useEffect(() => {
-    socket.current = io("ws://localhost:9014", { forceNew: true })
+    socket.current = io('ws://localhost:9014', { forceNew: true })
 
-    socket.current.on("add ball", (ball: number) => {
+    socket.current.on('add ball', (ball: number) => {
       calls.current = calls.current + 1
 
       if (calls.current === 1) {
         addBallsInScore(ball)
-      }
-      else if (calls.current > 1) {
+      } else if (calls.current > 1) {
         calls.current = 0
       }
     })
-
   }, [])
+
+  console.log('Cheguei no Scoreboard') //! TODO: Remove this comment
 
   return (
     <ScoreboardContainer>
@@ -131,43 +139,68 @@ export function Scoreboard() {
           image={ballsImages[ball.image]}
           position={{ x: ball.position.x, y: ball.position.y }}
         >
-          {
-            ball.bars.map((bar) => (
-              <BarImg key={bar.key} src={TieHandsBar} x={bar.x} y={bar.y}></BarImg>
-            ))
-          }
+          {ball.bars.map((bar) => (
+            <BarImg
+              key={bar.key}
+              src={TieHandsBar}
+              x={bar.x}
+              y={bar.y}
+            ></BarImg>
+          ))}
         </BallDiv>
       ))}
 
       <ScoreBar
         position={POSITION_OF_MAIN_BAR}
-        fontSize={FONT_SIZE_OF_MAIN_BAR} height={HEIGHT_OF_MAIN_BAR} width={WIDTH_OF_MAIN_BAR}
-        fillOfBanker={fillOfBankerBar.current} fillOfPlayer={fillOfPlayerBar.current} fillOfTieHands={fillOfTieHandsBar.current}
-        textOfBanker={textOfBankerBar.current} textOfPlayer={textOfPlayerBar.current} textOfTieHand={textOfTieHandsBar.current}
+        fontSize={FONT_SIZE_OF_MAIN_BAR}
+        height={HEIGHT_OF_MAIN_BAR}
+        width={WIDTH_OF_MAIN_BAR}
+        fillOfBanker={fillOfBankerBar.current}
+        fillOfPlayer={fillOfPlayerBar.current}
+        fillOfTieHands={fillOfTieHandsBar.current}
+        textOfBanker={textOfBankerBar.current}
+        textOfPlayer={textOfPlayerBar.current}
+        textOfTieHand={textOfTieHandsBar.current}
       />
 
       <ScoreBar
         position={POSITION_OF_LAST_BAR}
-        fontSize={FONT_SIZE_OF_LASTS_BAR} height={HEIGHT_OF_LASTS_BAR} width={WIDTH_OF_LASTS_BAR}
-        fillOfBanker={fillOfBankerLastBar.current} fillOfPlayer={fillOfPlayerLastBar.current} fillOfTieHands={fillOfTieHandsLastBar.current}
-        textOfBanker={textOfBankerLastBar.current} textOfPlayer={textOfPlayerLastBar.current} textOfTieHand={textOfTieHandsLastBar.current}
+        fontSize={FONT_SIZE_OF_LASTS_BAR}
+        height={HEIGHT_OF_LASTS_BAR}
+        width={WIDTH_OF_LASTS_BAR}
+        fillOfBanker={fillOfBankerLastBar.current}
+        fillOfPlayer={fillOfPlayerLastBar.current}
+        fillOfTieHands={fillOfTieHandsLastBar.current}
+        textOfBanker={textOfBankerLastBar.current}
+        textOfPlayer={textOfPlayerLastBar.current}
+        textOfTieHand={textOfTieHandsLastBar.current}
       />
 
       <ScoreBar
         position={POSITION_OF_PENULT_BAR}
-        fontSize={FONT_SIZE_OF_LASTS_BAR} height={HEIGHT_OF_LASTS_BAR} width={WIDTH_OF_LASTS_BAR}
-        fillOfBanker={fillOfBankerPenultBar.current} fillOfPlayer={fillOfPlayerPenultBar.current} fillOfTieHands={fillOfTieHandsPenultBar.current}
-        textOfBanker={textOfBankerPenultBar.current} textOfPlayer={textOfPlayerPenultBar.current} textOfTieHand={textOfTieHandsPenultBar.current}
+        fontSize={FONT_SIZE_OF_LASTS_BAR}
+        height={HEIGHT_OF_LASTS_BAR}
+        width={WIDTH_OF_LASTS_BAR}
+        fillOfBanker={fillOfBankerPenultBar.current}
+        fillOfPlayer={fillOfPlayerPenultBar.current}
+        fillOfTieHands={fillOfTieHandsPenultBar.current}
+        textOfBanker={textOfBankerPenultBar.current}
+        textOfPlayer={textOfPlayerPenultBar.current}
+        textOfTieHand={textOfTieHandsPenultBar.current}
       />
 
       <ScoreBar
         position={POSITION_OF_ANTEPENULT_BAR}
-        fontSize={FONT_SIZE_OF_LASTS_BAR} height={HEIGHT_OF_LASTS_BAR} width={WIDTH_OF_LASTS_BAR}
-        fillOfBanker={fillOfBankerAntepenultBar.current} fillOfPlayer={fillOfPlayerAntepenultBar.current} fillOfTieHands={fillOfTieHandsAntepenultBar.current}
-        textOfBanker={textOfBankerAntepenultBar.current} textOfPlayer={textOfPlayerAntepenultBar.current} textOfTieHand={textOfTieHandsAntepenultBar.current}
+        fontSize={FONT_SIZE_OF_LASTS_BAR}
+        height={HEIGHT_OF_LASTS_BAR}
+        width={WIDTH_OF_LASTS_BAR}
+        fillOfBanker={fillOfBankerAntepenultBar.current}
+        fillOfPlayer={fillOfPlayerAntepenultBar.current}
+        fillOfTieHands={fillOfTieHandsAntepenultBar.current}
+        textOfBanker={textOfBankerAntepenultBar.current}
+        textOfPlayer={textOfPlayerAntepenultBar.current}
+        textOfTieHand={textOfTieHandsAntepenultBar.current}
       />
-
-
     </ScoreboardContainer>
   )
 }

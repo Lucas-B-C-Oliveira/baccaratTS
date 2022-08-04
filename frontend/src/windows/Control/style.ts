@@ -17,7 +17,7 @@ export const ControlContainer = styled.div`
 
   padding: 27px;
   padding-top: 74.5px;
-  transform: rotate(90deg) translate(-420px,-420px);
+  transform: rotate(90deg) translate(-420px, -420px);
 `
 
 export const TopContainer = styled.div`

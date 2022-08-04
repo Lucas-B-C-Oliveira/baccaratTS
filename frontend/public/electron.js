@@ -7,56 +7,31 @@ let server
 
 function createWindow() {
 
-  server = createProcess(path.join(__dirname, "server/Server.exe")); /// TODO: need implement a async verification for show the windows of game. Because, just should show windows if server is running
+  server = createProcess(path.join(__dirname, "../build/server/server.exe")); /// TODO: need implement a async verification for show the windows of game. Because, just should show windows if server is running
+  //? TODO: server process is not work in builder version, need fix that
   const displays = screen.getAllDisplays()
 
-  // console.log(displays[2]) //TODO: Remove this
+  // console.log(displays[2]) //! TODO: Remove this line
 
   const scoreboardWindow = new BrowserWindow({
-    //! width: 1920,
-    //! height: 1080,
     x: displays[0].bounds.x,
     y: displays[0].bounds.y,
     kiosk: true,
     fullscreen: true,
     frame: false,
-    useContentSize: true,
-    //! center: true,
-    //! resizable: false,
-    //! alwaysOnTop: true,
-    webPreferences: {
-      webSecurity: false
-    }
-
-    //TODO: Remove all with //!
+    useContentSize: true
   })
 
   const controlWindow = new BrowserWindow({
-    //! width: 1920,
-    //! height: 1080,
     x: displays[1].bounds.x,
     y: displays[1].bounds.y,
     kiosk: true,
     fullscreen: true,
     frame: false,
     useContentSize: true,
-    webPreferences: {
-      webSecurity: false
-    }
-    //! center: true,
-    //! resizable: false,
-    //! alwaysOnTop: true,
-
-    //TODO: Remove this
   })
 
-
-  // scoreboardWindow.loadURL("http://localhost:5177/")
-  // scoreboardWindow.loadFile('index.html')
-  // console.log('__dirname', __dirname)
-
-  const urlScoreboard = `file://${__dirname}/../dist/index.html`
-  console.log('urlScoreboard', urlScoreboard)
+  const urlScoreboard = `file://${path.join(__dirname, '../build/index.html')}`
 
   scoreboardWindow.loadURL(urlScoreboard)
   scoreboardWindow.once('ready-to-show', () => {
@@ -67,7 +42,7 @@ function createWindow() {
   controlWindow.loadURL(urlScoreboard + '#/control')
   // controlWindow.loadURL("http://localhost:5177/control")
   controlWindow.once('ready-to-show', () => {
-    // win2.webContents.setZoomFactor(1) //TODO: Remove this
+    // win2.webContents.setZoomFactor(1) //! TODO: Remove this line
     controlWindow.show()
   })
 

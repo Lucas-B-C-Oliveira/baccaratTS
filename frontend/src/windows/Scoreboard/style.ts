@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import scoreboardImageBackground from '../../assets/scoreboard/background-scoreboard.png'
+import scoreboardImageBackground from './../../assets/scoreboard/background-scoreboard.png'
 
 interface Ball {
   image: string
@@ -34,7 +34,6 @@ export const BallDiv = styled.div<Ball>`
   top: ${(props) => {
     return props.position.y + 'rem'
   }};
-
 `
 
 export const BarImg = styled.img<Bar>`
@@ -47,5 +46,4 @@ export const BarImg = styled.img<Bar>`
   top: ${(props) => {
     return props.y + 'rem'
   }};
-
 `

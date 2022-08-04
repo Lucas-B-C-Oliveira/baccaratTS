@@ -3,16 +3,16 @@ import { GlobalStyles } from './styles/global'
 import { defaultTheme } from './styles/themes/default'
 
 import { ScoreContextProvider } from './context/ScoreContext'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { Router } from './Router'
 
 export function App() {
   return (
     <ThemeProvider theme={defaultTheme}>
       <ScoreContextProvider>
-        <BrowserRouter>
+        <HashRouter>
           <Router />
-        </BrowserRouter>
+        </HashRouter>
       </ScoreContextProvider>
       <GlobalStyles />
     </ThemeProvider>
