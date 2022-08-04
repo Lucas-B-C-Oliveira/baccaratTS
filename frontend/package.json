@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "commonjs",
-  "main": "./public/electron.mjs",
-  "homepage": "./react/build",
+  "main": "./public/electron.js",
+  "homepage": "/",
   "productName": "Baccarat",
   "author": {
     "name": "Lucas B C Oliveira",
