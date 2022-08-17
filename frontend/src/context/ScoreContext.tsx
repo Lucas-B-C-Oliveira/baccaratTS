@@ -1,5 +1,11 @@
 import { useScoreStore } from '../stores/score'
-import { createContext, ReactNode, useEffect, useReducer, useRef } from 'react'
+import React, {
+  createContext,
+  ReactNode,
+  useEffect,
+  useReducer,
+  useRef,
+} from 'react'
 import { BallTypes } from '../windows/Scoreboard'
 
 interface ScoreContextType {
@@ -54,10 +60,12 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
   const currentMatch = useRef(0)
 
-  const TOP_BALL_MULTIPLIER_FOR_X_AND_Y = 3.25
-  const START_POSITION_Y_FOR_TOP_BALL = 1.9
-  const START_POSITION_Y_FOR_BOTTOM_BALL = 22.18
-  const START_POSITION_X_FOR_BALLS = 2.2
+  const TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y = 4.8 // 8.89
+  const TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X = 2.707
+
+  const START_POSITION_Y_FOR_TOP_BALL = 2.3
+  const START_POSITION_Y_FOR_BOTTOM_BALL = 32.391
+  const START_POSITION_X_FOR_BALLS = 1.5
 
   /// ### Top Ball's variables
   const columnOfTop = useRef(0)
@@ -78,9 +86,9 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   /// ### Bottom Bars Variables
   const numberOfBarsInPreviousBall = useRef(0)
 
-  const START_POSITION_X_FOR_BOTTOM_BAR = 0.8
-  const START_POSITION_Y_FOR_BOTTOM_BAR = 2.31
-  const BOTTOM_BAR_MULTIPLIER_FOR_Y = 0.3
+  const START_POSITION_X_FOR_BOTTOM_BAR = 35
+  const START_POSITION_Y_FOR_BOTTOM_BAR = 90
+  const BOTTOM_BAR_MULTIPLIER_FOR_Y = 11.4
 
   /// #### Bar Variables
 
@@ -146,35 +154,37 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
   function addBallsInScore(newBall: number) {
     if (
-      newBall === BallTypes.TIE_HANDS_BALL &&
-      numberOfBarsInPreviousBall.current >= 6
+      (newBall === BallTypes.TIE_HANDS_BALL &&
+        numberOfBarsInPreviousBall.current >= 6) ||
+      (newBall === BallTypes.TIE_HANDS_BALL && currentMatch.current === 0)
     )
       return
 
-    let newBallTop = newBall
-    switch (newBallTop) {
+    let ballForBarFill = newBall
+
+    switch (ballForBarFill) {
       case BallTypes.PLAYER_8:
-        newBallTop = BallTypes.PLAYER
+        ballForBarFill = BallTypes.PLAYER
         break
       case BallTypes.PLAYER_9:
-        newBallTop = BallTypes.PLAYER
+        ballForBarFill = BallTypes.PLAYER
         break
       case BallTypes.BANKER_8:
-        newBallTop = BallTypes.BANKER
+        ballForBarFill = BallTypes.BANKER
         break
       case BallTypes.BANKER_9:
-        newBallTop = BallTypes.BANKER
+        ballForBarFill = BallTypes.BANKER
         break
 
       default:
-        newBallTop = newBall
+        ballForBarFill = newBall
         break
     }
 
     numberOfBallsInGame.current = numberOfBallsInGame.current + 1
-    updateBar(newBallTop, numberOfBallsInGame.current)
+    updateBar(ballForBarFill, numberOfBallsInGame.current)
 
-    addTopBall(newBallTop)
+    addTopBall(newBall)
     addBottomBall(newBall)
     currentMatch.current = currentMatch.current + 1
   }
@@ -195,11 +205,11 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
     const newXTopPosition =
       START_POSITION_X_FOR_BALLS +
-      TOP_BALL_MULTIPLIER_FOR_X_AND_Y * columnOfTop.current
+      TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfTop.current
 
     const newYTopPosition =
       START_POSITION_Y_FOR_TOP_BALL +
-      TOP_BALL_MULTIPLIER_FOR_X_AND_Y * rowOfTop.current
+      TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y * rowOfTop.current
 
     const newTopPosition = {
       x: newXTopPosition,
@@ -260,7 +270,6 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         break
       default:
         modifiedBottomBall.current = BallTypes.DEFAULT
-        newBall = newBall
         break
     }
 
@@ -277,10 +286,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
         newYBottomPosition =
           START_POSITION_Y_FOR_BOTTOM_BALL +
-          TOP_BALL_MULTIPLIER_FOR_X_AND_Y * lastLockedBottomRow.current
+          TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y * lastLockedBottomRow.current
         newXBottomPosition =
           START_POSITION_X_FOR_BALLS +
-          TOP_BALL_MULTIPLIER_FOR_X_AND_Y * columnOfBottom.current
+          TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfBottom.current
 
         lastLockedBottomColumn.current = columnOfBottom.current
         needLockANewRow.current = true
@@ -293,10 +302,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
         newYBottomPosition =
           START_POSITION_Y_FOR_BOTTOM_BALL +
-          TOP_BALL_MULTIPLIER_FOR_X_AND_Y * rowOfBottom.current
+          TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y * rowOfBottom.current
         newXBottomPosition =
           START_POSITION_X_FOR_BALLS +
-          TOP_BALL_MULTIPLIER_FOR_X_AND_Y * columnOfBottom.current
+          TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfBottom.current
       }
     } else {
       /// Put the ball in LEFT
@@ -321,10 +330,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       newYBottomPosition =
         START_POSITION_Y_FOR_BOTTOM_BALL +
-        TOP_BALL_MULTIPLIER_FOR_X_AND_Y * initialRowFree.current
+        TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y * initialRowFree.current
       newXBottomPosition =
         START_POSITION_X_FOR_BALLS +
-        TOP_BALL_MULTIPLIER_FOR_X_AND_Y * columnOfBottom.current
+        TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfBottom.current
     }
 
     let cleanBottomBalls = false
@@ -344,10 +353,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       newYBottomPosition =
         START_POSITION_Y_FOR_BOTTOM_BALL +
-        TOP_BALL_MULTIPLIER_FOR_X_AND_Y * rowOfBottom.current
+        TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_Y * rowOfBottom.current
       newXBottomPosition =
         START_POSITION_X_FOR_BALLS +
-        TOP_BALL_MULTIPLIER_FOR_X_AND_Y * columnOfBottom.current
+        TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfBottom.current
     }
 
     const newBottomPosition = {
@@ -428,16 +437,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfBankerBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfBankerBar.current
       ) {
         fillOfBankerBar.current =
           fillOfBankerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfBankerBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfBankerBar.current === 0) {
           fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -448,16 +457,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfPlayerBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfPlayerBar.current
       ) {
         fillOfPlayerBar.current =
           fillOfPlayerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfPlayerBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfPlayerBar.current === 0) {
           fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -468,16 +477,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfTieHandsBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfTieHandsBar.current
       ) {
         fillOfTieHandsBar.current =
           fillOfTieHandsBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfTieHandsBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfTieHandsBar.current === 0) {
           fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL

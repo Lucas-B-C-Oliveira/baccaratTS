@@ -12,7 +12,7 @@ import Banker9 from '../../assets/scoreboard/banker-9.png'
 import { ScoreBar } from './components/ScoreBar'
 import { useContext, useEffect, useRef } from 'react'
 import { ScoreContext } from '../../context/ScoreContext'
-import { io, Socket } from 'socket.io-client' //! TODO: Remove this!
+import { io, Socket } from 'socket.io-client'
 
 export const ballsImages = [
   Banker,
@@ -39,36 +39,37 @@ export function Scoreboard() {
   const ballsTop = useScoreStore((state) => state.ballsTop)
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
-  const calls = useRef(0)
+  const calls = useRef(0) //! TODO: Remove this variable and its checks
+  const isDev = useRef(false) //! TODO: Remove this variable and its checks
 
-  const FONT_SIZE_OF_MAIN_BAR = 3
-  const HEIGHT_OF_MAIN_BAR = 3.375
-  const WIDTH_OF_MAIN_BAR = 53.625
+  const FONT_SIZE_OF_MAIN_BAR = 160
+  const HEIGHT_OF_MAIN_BAR = 5.0
+  const WIDTH_OF_MAIN_BAR = 44.69
 
-  const FONT_SIZE_OF_LASTS_BAR = 2
-  const HEIGHT_OF_LASTS_BAR = 2.7
-  const WIDTH_OF_LASTS_BAR = 38.7
+  const FONT_SIZE_OF_LASTS_BAR = 110
+  const HEIGHT_OF_LASTS_BAR = 4
+  const WIDTH_OF_LASTS_BAR = 32.25
 
-  const POSITION_X_OF_LASTS_BARS = 33
+  const POSITION_X_OF_LASTS_BARS = 31.2
 
   const POSITION_OF_MAIN_BAR = {
-    x: 62.7,
-    y: 16.7,
+    x: 52.4,
+    y: 25.2,
   }
 
   const POSITION_OF_LAST_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 48.5,
+    y: 73,
   }
 
   const POSITION_OF_PENULT_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 51.7,
+    y: 77.6,
   }
 
   const POSITION_OF_ANTEPENULT_BAR = {
     x: POSITION_X_OF_LASTS_BARS,
-    y: 54.9,
+    y: 81.9,
   }
 
   const {
@@ -110,18 +111,23 @@ export function Scoreboard() {
   useEffect(() => {
     socket.current = io('ws://localhost:9014', { forceNew: true })
 
-    socket.current.on('add ball', (ball: number) => {
-      calls.current = calls.current + 1
+    if (isDev.current) {
+      //! TODO: Remove this check "isDev"
+      socket.current.on('add ball', (ball: number) => {
+        calls.current = calls.current + 1
 
-      if (calls.current === 1) {
+        if (calls.current === 1) {
+          addBallsInScore(ball)
+        } else if (calls.current > 1) {
+          calls.current = 0
+        }
+      })
+    } else {
+      socket.current.on('add ball', (ball: number) => {
         addBallsInScore(ball)
-      } else if (calls.current > 1) {
-        calls.current = 0
-      }
-    })
+      })
+    }
   }, [])
-
-  console.log('Cheguei no Scoreboard') //! TODO: Remove this comment
 
   return (
     <ScoreboardContainer>

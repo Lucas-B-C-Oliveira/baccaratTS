@@ -1,5 +1,5 @@
 
-const { app, BrowserWindow, screen } = require('electron')
+const { app, BrowserWindow, screen, webFrame, webFrameMain } = require('electron')
 const path = require('path')
 const createProcess = require('child_process').spawn
 
@@ -7,62 +7,74 @@ let server
 
 function createWindow() {
 
-  server = createProcess(path.join(__dirname, "../build/server/server.exe")); /// TODO: need implement a async verification for show the windows of game. Because, just should show windows if server is running
-  //? TODO: server process is not work in builder version, need fix that
-  const displays = screen.getAllDisplays()
+  const isDev = false //! TODO: Remove this variable and its checks
+  let urlServer = ''
 
-  // console.log(displays[2]) //! TODO: Remove this line
+  if (isDev) {
+    urlServer = path.join(__dirname, "./server/server.exe")
+  }
+  else {
+    urlServer = path.join(process.resourcesPath, "./build/server/server.exe")
+  }
+
+  server = createProcess(urlServer)
+
+  const displays = screen.getAllDisplays()
 
   const scoreboardWindow = new BrowserWindow({
     x: displays[0].bounds.x,
     y: displays[0].bounds.y,
+    width: displays[0].bounds.width,
+    height: displays[0].bounds.height,
     kiosk: true,
     fullscreen: true,
     frame: false,
-    useContentSize: true
   })
 
   const controlWindow = new BrowserWindow({
     x: displays[1].bounds.x,
     y: displays[1].bounds.y,
+    width: displays[1].bounds.width,
+    height: displays[1].bounds.height,
     kiosk: true,
     fullscreen: true,
     frame: false,
-    useContentSize: true,
   })
 
-  const urlScoreboard = `file://${path.join(__dirname, '../build/index.html')}`
+  let urlBase
+  let controlUlr
+  let scoreboardUlr
 
-  scoreboardWindow.loadURL(urlScoreboard)
+  if (isDev) {
+    urlBase = 'http://localhost:5177'
+    scoreboardUlr = urlBase + '/'
+    controlUlr = urlBase + '#/control'
+  }
+  else {
+    urlBase = `file://${path.join(__dirname, '../build/index.html')}`
+    scoreboardUlr = urlBase + '#/'
+    controlUlr = urlBase + '#/control'
+  }
+
+  scoreboardWindow.loadURL(scoreboardUlr)
   scoreboardWindow.once('ready-to-show', () => {
-    scoreboardWindow.webContents.setZoomFactor(0.8)
     scoreboardWindow.show()
   })
 
-  controlWindow.loadURL(urlScoreboard + '#/control')
-  // controlWindow.loadURL("http://localhost:5177/control")
+  controlWindow.loadURL(controlUlr)
   controlWindow.once('ready-to-show', () => {
-    // win2.webContents.setZoomFactor(1) //! TODO: Remove this line
     controlWindow.show()
   })
 
-  controlWindow.on('close', () => {
-    closeAll()
-  })
-
-  scoreboardWindow.on('close', () => {
-    closeAll()
-  })
-
+  controlWindow.on('close', () => { closeAll() })
+  scoreboardWindow.on('close', () => { closeAll() })
 }
 
 app.whenReady().then(() => {
   createWindow()
 })
 
-app.on("window-all-closed", () => {
-  closeAll()
-})
+app.on("window-all-closed", () => { closeAll() })
 
 function closeAll() {
   app.quit()

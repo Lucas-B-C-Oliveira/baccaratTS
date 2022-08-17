@@ -6,6 +6,7 @@ import {
   TopContainer,
   MiddleButton,
   BottomButton,
+  ControlContainerMain,
 } from './style'
 
 import bankerBgBtn from '../../assets/control/banker/banker-btn.png'
@@ -80,14 +81,9 @@ export function Control() {
   const buttonOnConfirmation = useRef<ButtonsName>(ButtonsName.DEFAULT)
 
   const socket = useRef<null | Socket>(null)
-  console.log('cheguei no Control') //! TODO: Remove this comment
 
   useEffect(() => {
-    socket.current = io('ws://localhost:9014', {
-      forceNew: true,
-      multiplex: false,
-      query: { 'my-key': 'control' },
-    })
+    socket.current = io('ws://localhost:9014', { forceNew: true })
   }, [])
 
   function addBallsInScore(ball: number) {
@@ -181,150 +177,149 @@ export function Control() {
   }
 
   return (
-    <ControlContainer>
-      <TopContainer>
-        <TopButton
-          backgroundImageNormal={playerBgBtn}
-          backgroundImagePressed={playerPressedBgBtn}
-          backgroundImageDisabled={playerDisabledBgBtn}
-          onClick={handlePlayerButton}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.PLAYER
-              ? disabledState
-              : !disabledState
-          }
-        />
-        <TopButton
-          backgroundImageNormal={bankerBgBtn}
-          backgroundImagePressed={bankerPressedBgBtn}
-          backgroundImageDisabled={bankerDisabledBgBtn}
-          onClick={handleBankerButton}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.BANKER
-              ? disabledState
-              : !disabledState
-          }
-        />
-      </TopContainer>
-
-      <MiddleContainer>
-        <MiddleButton
-          backgroundImageNormal={player8BgBtn}
-          backgroundImagePressed={player8PressedBgBtn}
-          backgroundImageDisabled={player8DisabledBgBtn}
-          onClick={handlePlayer8Button}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.PLAYER_8
-              ? disabledState
-              : !disabledState
-          }
-        />
-        <MiddleButton
-          backgroundImageNormal={player9BgBtn}
-          backgroundImagePressed={player9PressedBgBtn}
-          backgroundImageDisabled={player9DisabledBgBtn}
-          onClick={handlePlayer9Button}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.PLAYER_9
-              ? disabledState
-              : !disabledState
-          }
-        />
-        <MiddleButton
-          backgroundImageNormal={tieBgBtn}
-          backgroundImagePressed={tiePressedBgBtn}
-          backgroundImageDisabled={tieDisabledBgBtn}
-          width={189}
-          height={532}
-          paddingTop={70}
-          onClick={handleTieHandsButton}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.TIE_HANDS
-              ? disabledState
-              : !disabledState
-          }
-        />
-        <MiddleButton
-          backgroundImageNormal={banker8BgBtn}
-          backgroundImagePressed={banker8PressedBgBtn}
-          backgroundImageDisabled={banker8DisabledBgBtn}
-          onClick={handleBanker8Button}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.BANKER_8
-              ? disabledState
-              : !disabledState
-          }
-        />
-        <MiddleButton
-          backgroundImageNormal={banker9BgBtn}
-          backgroundImagePressed={banker9PressedBgBtn}
-          backgroundImageDisabled={banker9DisabledBgBtn}
-          onClick={handleBanker9Button}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.BANKER_9
-              ? disabledState
-              : !disabledState
-          }
-        />
-      </MiddleContainer>
-
-      <BottomContainer>
-        {disabledState ? (
-          <BottomButton
-            backgroundImageNormal={cancelBgBtn}
-            backgroundImagePressed={cancelPressedBgBtn}
-            backgroundImageDisabled={cancelDisabledBgBtn}
-            width={786}
-            height={245}
-            leftPosition={94.25}
-            onClick={handleCancelButton}
+    <ControlContainerMain>
+      <ControlContainer>
+        <TopContainer>
+          <TopButton
+            backgroundImageNormal={playerBgBtn}
+            backgroundImagePressed={playerPressedBgBtn}
+            backgroundImageDisabled={playerDisabledBgBtn}
+            onClick={handlePlayerButton}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.PLAYER
+                ? disabledState
+                : !disabledState
+            }
           />
-        ) : (
-          <BottomButton
-            backgroundImageNormal={cancelLastBgBtn}
-            backgroundImagePressed={cancelLastPressedBgBtn}
-            backgroundImageDisabled={cancelLastDisabledBgBtn}
-            width={786}
-            height={245}
-            leftPosition={94.25}
-            onClick={handleCancelLastButton}
+          <TopButton
+            backgroundImageNormal={bankerBgBtn}
+            backgroundImagePressed={bankerPressedBgBtn}
+            backgroundImageDisabled={bankerDisabledBgBtn}
+            onClick={handleBankerButton}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.BANKER
+                ? disabledState
+                : !disabledState
+            }
           />
-        )}
+        </TopContainer>
 
-        <BottomButton
-          backgroundImageNormal={clearShoeBgBtn}
-          backgroundImagePressed={clearShoePressedBgBtn}
-          backgroundImageDisabled={clearShoeDisabledBgBtn}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.CLEAR_SHOE
-              ? disabledState
-              : !disabledState
-          }
-          onClick={handleClearShoeButton}
-        />
-        <BottomButton
-          backgroundImageNormal={configBgBtn}
-          backgroundImagePressed={configPressedBgBtn}
-          backgroundImageDisabled={configDisabledBgBtn}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.CONFIG
-              ? disabledState
-              : !disabledState
-          }
-          onClick={handleConfigButton}
-        />
-        <BottomButton
-          backgroundImageNormal={closeBgBtn}
-          backgroundImagePressed={closePressedBgBtn}
-          backgroundImageDisabled={closeDisabledBgBtn}
-          disabled={
-            buttonOnConfirmation.current !== ButtonsName.CLOSE
-              ? disabledState
-              : !disabledState
-          }
-          onClick={handleCloseButton}
-        />
-      </BottomContainer>
-    </ControlContainer>
+        <MiddleContainer>
+          <MiddleButton
+            backgroundImageNormal={player8BgBtn}
+            backgroundImagePressed={player8PressedBgBtn}
+            backgroundImageDisabled={player8DisabledBgBtn}
+            onClick={handlePlayer8Button}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.PLAYER_8
+                ? disabledState
+                : !disabledState
+            }
+          />
+          <MiddleButton
+            backgroundImageNormal={player9BgBtn}
+            backgroundImagePressed={player9PressedBgBtn}
+            backgroundImageDisabled={player9DisabledBgBtn}
+            onClick={handlePlayer9Button}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.PLAYER_9
+                ? disabledState
+                : !disabledState
+            }
+          />
+          <MiddleButton
+            backgroundImageNormal={tieBgBtn}
+            backgroundImagePressed={tiePressedBgBtn}
+            backgroundImageDisabled={tieDisabledBgBtn}
+            specialSize={true}
+            paddingTop={4.375}
+            onClick={handleTieHandsButton}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.TIE_HANDS
+                ? disabledState
+                : !disabledState
+            }
+          />
+          <MiddleButton
+            backgroundImageNormal={banker8BgBtn}
+            backgroundImagePressed={banker8PressedBgBtn}
+            backgroundImageDisabled={banker8DisabledBgBtn}
+            onClick={handleBanker8Button}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.BANKER_8
+                ? disabledState
+                : !disabledState
+            }
+          />
+          <MiddleButton
+            backgroundImageNormal={banker9BgBtn}
+            backgroundImagePressed={banker9PressedBgBtn}
+            backgroundImageDisabled={banker9DisabledBgBtn}
+            onClick={handleBanker9Button}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.BANKER_9
+                ? disabledState
+                : !disabledState
+            }
+          />
+        </MiddleContainer>
+
+        <BottomContainer>
+          {disabledState ? (
+            <BottomButton
+              backgroundImageNormal={cancelBgBtn}
+              backgroundImagePressed={cancelPressedBgBtn}
+              backgroundImageDisabled={cancelDisabledBgBtn}
+              specialSize={true}
+              leftPosition={5.891}
+              onClick={handleCancelButton}
+            />
+          ) : (
+            <BottomButton
+              backgroundImageNormal={cancelLastBgBtn}
+              backgroundImagePressed={cancelLastPressedBgBtn}
+              backgroundImageDisabled={cancelLastDisabledBgBtn}
+              specialSize={true}
+              leftPosition={5.891}
+              onClick={handleCancelLastButton}
+            />
+          )}
+
+          <BottomButton
+            backgroundImageNormal={clearShoeBgBtn}
+            backgroundImagePressed={clearShoePressedBgBtn}
+            backgroundImageDisabled={clearShoeDisabledBgBtn}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.CLEAR_SHOE
+                ? disabledState
+                : !disabledState
+            }
+            onClick={handleClearShoeButton}
+          />
+          <BottomButton
+            backgroundImageNormal={configBgBtn}
+            backgroundImagePressed={configPressedBgBtn}
+            backgroundImageDisabled={configDisabledBgBtn}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.CONFIG
+                ? disabledState
+                : !disabledState
+            }
+            onClick={handleConfigButton}
+          />
+          <BottomButton
+            backgroundImageNormal={closeBgBtn}
+            backgroundImagePressed={closePressedBgBtn}
+            backgroundImageDisabled={closeDisabledBgBtn}
+            disabled={
+              buttonOnConfirmation.current !== ButtonsName.CLOSE
+                ? disabledState
+                : !disabledState
+            }
+            onClick={handleCloseButton}
+          />
+        </BottomContainer>
+      </ControlContainer>
+    </ControlContainerMain>
   )
 }

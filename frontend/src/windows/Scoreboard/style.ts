@@ -15,35 +15,41 @@ interface Bar {
 }
 
 export const ScoreboardContainer = styled.div`
-  width: 1920px;
-  height: 1080px;
-  background: url(${scoreboardImageBackground}); //! TODO: verify if this is a best solution for a import a image for a image in background
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: url(${scoreboardImageBackground});
+  background-size: 100%;
 `
 
 export const BallDiv = styled.div<Ball>`
-  background: url(${(props) => props.image});
-  background-size: 2.5rem 2.5rem;
-  width: 2.5rem;
-  height: 2.5rem;
   position: absolute;
+  background: url(${(props) => props.image});
+
+  background-size: 2.29vw 4.07vh;
+  width: 2.29vw;
+  height: 4.07vh;
 
   left: ${(props) => {
-    return props.position.x + 'rem'
+    return props.position.x + 'vw'
   }};
 
   top: ${(props) => {
-    return props.position.y + 'rem'
+    return props.position.y + 'vh'
   }};
 `
 
 export const BarImg = styled.img<Bar>`
   position: absolute;
-  /* top: 2.08rem; */
+
+  width: 1.35vw;
+  height: 0.37037vh;
+
   left: ${(props) => {
-    return props.x + 'rem'
+    return props.x + '%'
   }};
 
   top: ${(props) => {
-    return props.y + 'rem'
+    return props.y + '%'
   }};
 `

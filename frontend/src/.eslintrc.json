@@ -2,7 +2,8 @@
     // "endOfLine": "auto",
     "extends": "@rocketseat/eslint-config/react",
     "rules": {
-        "no-unused-vars": "off"
+        "no-unused-vars": "off",
+        "max-len": "off"
         // "endOfLine": "auto"
         // "max-line-length": {
         //     "options": {

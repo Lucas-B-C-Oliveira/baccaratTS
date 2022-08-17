@@ -18,22 +18,27 @@ interface InnerBarsProps {
 
 export const OuterBarDiv = styled.div<OuterBarProps>`
   position: relative;
+
   left: ${(props) => {
-    return props.position.x + 'rem'
+    return props.position.x + '%'
   }};
+
   top: ${(props) => {
-    return props.position.y + 'rem'
+    return props.position.y + '%'
   }};
+
   width: ${(props) => {
-    return props.width + 'rem'
+    return props.width + '%'
   }};
+
   height: ${(props) => {
-    return props.height + 'rem'
+    return props.height + '%'
   }};
+
   overflow: hidden;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   border-style: solid;
-  border-width: 1px;
+  border-width: 0.0625rem;
   border-color: #0f172a;
   display: flex;
 `
@@ -42,10 +47,11 @@ export const BankerBarDiv = styled.div<InnerBarsProps>`
   width: ${(props) => {
     return props.widthOfBankerBar + '%'
   }};
+
   box-shadow: none;
   display: flex;
   font-size: ${(props) => {
-    return props.fontSize + 'rem'
+    return props.fontSize + '%'
   }};
   flex-direction: column;
   text-align: center;
@@ -78,7 +84,7 @@ export const PlayerBarDiv = styled.div<InnerBarsProps>`
   box-shadow: none;
   display: flex;
   font-size: ${(props) => {
-    return props.fontSize + 'rem'
+    return props.fontSize + '%'
   }};
   flex-direction: column;
   text-align: center;
@@ -114,7 +120,7 @@ export const TieHandsBarDiv = styled.div<InnerBarsProps>`
   display: flex;
   box-shadow: none;
   font-size: ${(props) => {
-    return props.fontSize + 'rem'
+    return props.fontSize + '%'
   }};
   flex-direction: column;
   text-align: center;
