@@ -42,11 +42,11 @@ export function Scoreboard() {
   const calls = useRef(0) //! TODO: Remove this variable and its checks
   const isDev = true //! TODO: Remove this variable and its checks
 
-  const FONT_SIZE_OF_MAIN_BAR = 160
+  const FONT_SIZE_OF_MAIN_BAR = 190
   const HEIGHT_OF_MAIN_BAR = 5.0
   const WIDTH_OF_MAIN_BAR = 44.69
 
-  const FONT_SIZE_OF_LASTS_BAR = 110
+  const FONT_SIZE_OF_LASTS_BAR = 140
   const HEIGHT_OF_LASTS_BAR = 4
   const WIDTH_OF_LASTS_BAR = 32.25
 
