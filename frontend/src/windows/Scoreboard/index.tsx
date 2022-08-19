@@ -40,7 +40,7 @@ export function Scoreboard() {
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
-  const isDev = useRef(false) //! TODO: Remove this variable and its checks
+  const isDev = true //! TODO: Remove this variable and its checks
 
   const FONT_SIZE_OF_MAIN_BAR = 160
   const HEIGHT_OF_MAIN_BAR = 5.0
@@ -111,7 +111,7 @@ export function Scoreboard() {
   useEffect(() => {
     socket.current = io('ws://localhost:9014', { forceNew: true })
 
-    if (isDev.current) {
+    if (isDev) {
       //! TODO: Remove this check "isDev"
       socket.current.on('add ball', (ball: number) => {
         calls.current = calls.current + 1
