@@ -10,6 +10,7 @@ import { BallTypes } from '../windows/Scoreboard'
 
 interface ScoreContextType {
   addBallsInScore: (newBall: number) => void
+  clearShoe: () => void
   fillOfBankerBar: React.MutableRefObject<number>
   fillOfPlayerBar: React.MutableRefObject<number>
   fillOfTieHandsBar: React.MutableRefObject<number>
@@ -34,6 +35,19 @@ interface ScoreContextType {
   textOfBankerAntepenultBar: React.MutableRefObject<number>
   textOfPlayerAntepenultBar: React.MutableRefObject<number>
   textOfTieHandsAntepenultBar: React.MutableRefObject<number>
+  lastShoeResultsBanker: React.MutableRefObject<number>
+  lastShoeResultsPlayer: React.MutableRefObject<number>
+  lastShoeResultsNatural: React.MutableRefObject<number>
+  lastShoeResultsTie: React.MutableRefObject<number>
+  lastShoeResultsHand: React.MutableRefObject<number>
+  currentShoeResultsBanker: React.MutableRefObject<number>
+  currentShoeResultsPlayer: React.MutableRefObject<number>
+  currentShoeResultsNatural: React.MutableRefObject<number>
+  currentShoeResultsTie: React.MutableRefObject<number>
+  currentShoeResultsHand: React.MutableRefObject<number>
+  currentMinBet: React.MutableRefObject<number>
+  currentMaxBet: React.MutableRefObject<number>
+  currentMaxTie: React.MutableRefObject<number>
 }
 
 interface ScoreContextProviderProps {
@@ -45,6 +59,7 @@ export const ScoreContext = createContext({} as ScoreContextType)
 export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const addBallTopOfScore = useScoreStore((state) => state.addBallTopOfScore)
   const setBallTopOfScore = useScoreStore((state) => state.setBallTopOfScore)
+  const cleanTheBalls = useScoreStore((state) => state.cleanTheBalls)
 
   const addBallBottomOfScore = useScoreStore(
     (state) => state.addBallBottomOfScore,
@@ -70,6 +85,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   /// ### Top Ball's variables
   const columnOfTop = useRef(0)
   const rowOfTop = useRef(0)
+  const cleanTheTopBalls = useRef(false)
 
   /// ### Bottom Ball's variables
   const rowOfBottom = useRef(0)
@@ -82,6 +98,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const previousBottomColumnCorrect = useRef(0)
   const initialRowFree = useRef(0)
   const modifiedBottomBall = useRef<BallTypes>(BallTypes.DEFAULT)
+  const cleanTheBottomBalls = useRef(false)
 
   /// ### Bottom Bars Variables
   const numberOfBarsInPreviousBall = useRef(0)
@@ -152,6 +169,23 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const textOfPlayerAntepenultBar = useRef<number>(0)
   const textOfTieHandsAntepenultBar = useRef<number>(0)
 
+  /// # Current Shoe Results
+  const currentShoeResultsBanker = useRef<number>(0)
+  const currentShoeResultsPlayer = useRef<number>(0)
+  const currentShoeResultsNatural = useRef<number>(0)
+  const currentShoeResultsTie = useRef<number>(0)
+  const currentShoeResultsHand = useRef<number>(0)
+  const currentMinBet = useRef<number>(0)
+  const currentMaxBet = useRef<number>(0)
+  const currentMaxTie = useRef<number>(0)
+
+  /// # Last Shoe Results
+  const lastShoeResultsBanker = useRef<number>(0)
+  const lastShoeResultsPlayer = useRef<number>(0)
+  const lastShoeResultsNatural = useRef<number>(0)
+  const lastShoeResultsTie = useRef<number>(0)
+  const lastShoeResultsHand = useRef<number>(0)
+
   function addBallsInScore(newBall: number) {
     if (
       (newBall === BallTypes.TIE_HANDS_BALL &&
@@ -183,6 +217,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
     numberOfBallsInGame.current = numberOfBallsInGame.current + 1
     updateBar(ballForBarFill, numberOfBallsInGame.current)
+    updateCurrentShoeResults(newBall)
 
     addTopBall(newBall)
     addBottomBall(newBall)
@@ -195,12 +230,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       rowOfTop.current = 0
     }
 
-    let cleanTopBalls = false
+    cleanTheTopBalls.current = false
 
     if (columnOfTop.current >= 18) {
-      columnOfTop.current = 0
-      rowOfTop.current = 0
-      cleanTopBalls = true
+      cleanTheTopGameTable()
     }
 
     const newXTopPosition =
@@ -224,7 +257,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       image: newBall,
       bars: [],
     }
-    if (cleanTopBalls) setBallTopOfScore(newTopBall)
+    if (cleanTheTopBalls.current) setBallTopOfScore(newTopBall)
     else addBallTopOfScore(newTopBall)
   }
 
@@ -336,20 +369,12 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         TOP_AND_BOTTOM_BALLS_MULTIPLIER_FOR_X * columnOfBottom.current
     }
 
-    let cleanBottomBalls = false
+    cleanTheBottomBalls.current = false
 
     if (columnOfBottom.current >= 36) {
       /// Clear the bottom game table
 
-      cleanBottomBalls = true
-
-      columnOfBottom.current = 0
-      rowOfBottom.current = 0
-      previousBottomColumnCorrect.current = 0
-      longSequenceOfEqualsBalls.current = false
-      needLockANewRow.current = false
-      lastLockedBottomRow.current = 7
-      initialRowFree.current = 0
+      cleanTheBottomGameTable()
 
       newYBottomPosition =
         START_POSITION_Y_FOR_BOTTOM_BALL +
@@ -375,7 +400,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     }
     previousBottomBall.current = newBall
 
-    if (cleanBottomBalls) setBallBottomOfScore(newBottomBall)
+    if (cleanTheBottomBalls.current) setBallBottomOfScore(newBottomBall)
     else addBallBottomOfScore(newBottomBall)
   }
 
@@ -437,16 +462,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfBankerBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfBankerBar.current
       ) {
         fillOfBankerBar.current =
           fillOfBankerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfBankerBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfBankerBar.current === 0) {
           fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -457,16 +482,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfPlayerBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfPlayerBar.current
       ) {
         fillOfPlayerBar.current =
           fillOfPlayerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfPlayerBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfPlayerBar.current === 0) {
           fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -477,16 +502,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfTieHandsBar.current -
-          numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+        numberOfEmptyBarFills *
+        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfTieHandsBar.current
       ) {
         fillOfTieHandsBar.current =
           fillOfTieHandsBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfTieHandsBar.current -
-              numberOfEmptyBarFills *
-                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+            numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfTieHandsBar.current === 0) {
           fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -596,7 +621,25 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       textOfTieHandsBar.current,
     )
 
-    /// ## To the Other Bars
+    puttingTheValuesInTheBars()
+
+    if (isFirstRender) forceUpdate()
+  }
+
+  function puttingTheValuesInTheBars() {
+    /// ### Main Bar
+    fillOfBankerBar.current =
+      previousValuesOfTheLastBars.current[0].fillOfBankerBar
+    fillOfPlayerBar.current =
+      previousValuesOfTheLastBars.current[0].fillOfPlayerBar
+    fillOfTieHandsBar.current =
+      previousValuesOfTheLastBars.current[0].fillOfTieHandsBar
+    textOfBankerBar.current =
+      previousValuesOfTheLastBars.current[0].textOfBankerBar
+    textOfPlayerBar.current =
+      previousValuesOfTheLastBars.current[0].textOfPlayerBar
+    textOfTieHandsBar.current =
+      previousValuesOfTheLastBars.current[0].textOfTieHandsBar
 
     /// ### Last Bar
     fillOfBankerLastBar.current =
@@ -642,17 +685,15 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       previousValuesOfTheLastBars.current[3].textOfPlayerBar
     textOfTieHandsAntepenultBar.current =
       previousValuesOfTheLastBars.current[3].textOfTieHandsBar
-
-    if (isFirstRender) forceUpdate()
   }
 
   function saveValuesOfTheBars(
-    fillOfBankerBar: number,
-    fillOfPlayerBar: number,
-    fillOfTieHandsBar: number,
-    textOfBankerBar: number,
-    textOfPlayerBar: number,
-    textOfTieHandsBar: number,
+    fillOfBankerBar: number = MODEL_OF_BARS_VARIABLES.fillOfBankerBar,
+    fillOfPlayerBar: number = MODEL_OF_BARS_VARIABLES.fillOfPlayerBar,
+    fillOfTieHandsBar: number = MODEL_OF_BARS_VARIABLES.fillOfTieHandsBar,
+    textOfBankerBar: number = MODEL_OF_BARS_VARIABLES.textOfBankerBar,
+    textOfPlayerBar: number = MODEL_OF_BARS_VARIABLES.textOfPlayerBar,
+    textOfTieHandsBar: number = MODEL_OF_BARS_VARIABLES.textOfTieHandsBar,
   ) {
     const valuesToSave = {
       fillOfBankerBar,
@@ -667,6 +708,65 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     previousValuesOfTheLastBars.current.unshift(valuesToSave)
   }
 
+  function updateCurrentShoeResults(newBall: number) {
+    if (newBall === BallTypes.BANKER)
+      currentShoeResultsBanker.current = currentShoeResultsBanker.current + 1
+    else if (newBall === BallTypes.PLAYER)
+      currentShoeResultsPlayer.current = currentShoeResultsPlayer.current + 1
+    else if (newBall === BallTypes.TIE_HANDS_BALL)
+      currentShoeResultsTie.current = currentShoeResultsTie.current + 1
+    else if (
+      newBall === BallTypes.BANKER_8 ||
+      newBall === BallTypes.BANKER_9 ||
+      newBall === BallTypes.PLAYER_8 ||
+      newBall === BallTypes.PLAYER_9
+    )
+      currentShoeResultsNatural.current = currentShoeResultsNatural.current + 1
+
+    currentShoeResultsHand.current = currentShoeResultsHand.current + 1
+  }
+
+  function cleanTheBottomGameTable() {
+    cleanTheBottomBalls.current = false
+    columnOfBottom.current = 0
+    rowOfBottom.current = 0
+    previousBottomColumnCorrect.current = 0
+    longSequenceOfEqualsBalls.current = false
+    needLockANewRow.current = false
+    lastLockedBottomRow.current = 7
+    initialRowFree.current = 0
+    previousBottomBall.current = undefined
+    lastLockedBottomColumn.current = 0
+    modifiedBottomBall.current = BallTypes.DEFAULT
+  }
+
+  function cleanTheTopGameTable() {
+    columnOfTop.current = 0
+    rowOfTop.current = 0
+    cleanTheTopBalls.current = false
+  }
+
+  function clearShoe() {
+    cleanTheBottomGameTable()
+    cleanTheTopGameTable()
+    saveValuesOfTheBars()
+    puttingTheValuesInTheBars(true)
+
+    lastShoeResultsBanker.current = currentShoeResultsBanker.current
+    lastShoeResultsPlayer.current = currentShoeResultsPlayer.current
+    lastShoeResultsNatural.current = currentShoeResultsNatural.current
+    lastShoeResultsTie.current = currentShoeResultsTie.current
+    lastShoeResultsHand.current = currentShoeResultsHand.current
+
+    currentShoeResultsBanker.current = 0
+    currentShoeResultsPlayer.current = 0
+    currentShoeResultsNatural.current = 0
+    currentShoeResultsTie.current = 0
+    currentShoeResultsHand.current = 0
+    currentMatch.current = 0
+    cleanTheBalls()
+  }
+
   useEffect(() => {
     updateBar(-1, 0, true)
   }, [])
@@ -675,6 +775,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     <ScoreContext.Provider
       value={{
         addBallsInScore,
+        clearShoe,
         fillOfBankerBar,
         fillOfPlayerBar,
         fillOfTieHandsBar,
@@ -699,6 +800,19 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         textOfBankerAntepenultBar,
         textOfPlayerAntepenultBar,
         textOfTieHandsAntepenultBar,
+        lastShoeResultsBanker,
+        lastShoeResultsPlayer,
+        lastShoeResultsNatural,
+        lastShoeResultsTie,
+        lastShoeResultsHand,
+        currentShoeResultsBanker,
+        currentShoeResultsPlayer,
+        currentShoeResultsNatural,
+        currentShoeResultsTie,
+        currentShoeResultsHand,
+        currentMinBet,
+        currentMaxBet,
+        currentMaxTie,
       }}
     >
       {children}

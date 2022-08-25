@@ -90,6 +90,10 @@ export function Control() {
     if (socket.current) socket.current.emit('add balls in score', ball)
   }
 
+  function clearShoe() {
+    if (socket.current) socket.current.emit('clear shoe')
+  }
+
   function setDisableButtonsState(
     isInConfirmation: boolean,
     buttonToIgnore: ButtonsName = ButtonsName.DEFAULT,
@@ -110,9 +114,10 @@ export function Control() {
   }
 
   function handleClearShoeButton() {
-    // setDisableButtonsState(true)
-    console.log('ClearShoe button clicked')
-    //! TODO: Need Implemented here
+    if (disabledState) {
+      clearShoe()
+      setDisableButtonsState(true)
+    } else setDisableButtonsState(false, ButtonsName.CLEAR_SHOE)
   }
 
   function handleConfigButton() {

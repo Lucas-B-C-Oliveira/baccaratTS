@@ -49,15 +49,15 @@ export const BankerBarDiv = styled.div<InnerBarsProps>`
   }};
 
   box-shadow: none;
-  display: flex;
   font-size: ${(props) => {
     return props.fontSize + '%'
   }};
+  display: flex;
   flex-direction: column;
   text-align: center;
   white-space: nowrap;
-  color: #000000;
   justify-content: center;
+  color: #000000;
   background-image: linear-gradient(
     #f66262,
     #f66262,

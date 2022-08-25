@@ -24,6 +24,7 @@ interface Score {
   setBallBottomOfScore: (newBall: Ball) => void
   setBallTopOfScore: (newBall: Ball) => void
   addBarToPreviousBottomBall: (newBar: Bar) => void
+  cleanTheBalls: () => void
 }
 
 export const useScoreStore = create<Score>((set, get) => ({
@@ -64,5 +65,12 @@ export const useScoreStore = create<Score>((set, get) => ({
         ballsBottom: [...state.ballsBottom, lastIndex],
       }))
     }
+  },
+
+  cleanTheBalls: () => {
+    set(() => ({
+      ballsTop: [],
+      ballsBottom: [],
+    }))
   },
 }))
