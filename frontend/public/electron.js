@@ -7,7 +7,7 @@ let server
 
 function createWindow() {
 
-  const isDev = true //! TODO: Remove this variable and its checks
+  const isDev = false //! TODO: Remove this variable and its checks
   let urlServer = ''
 
   if (isDev) {

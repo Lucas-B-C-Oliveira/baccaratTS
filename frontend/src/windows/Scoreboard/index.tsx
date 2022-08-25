@@ -49,7 +49,7 @@ export function Scoreboard() {
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
-  const isDev = true //! TODO: Remove this variable and its checks
+  const isDev = false //! TODO: Remove this variable and its checks
 
   const FONT_SIZE_OF_MAIN_BAR = 190
   const HEIGHT_OF_MAIN_BAR = 5.0

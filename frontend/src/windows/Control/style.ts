@@ -24,8 +24,8 @@ export const ControlContainer = styled.div`
   display: grid;
   row-gap: 5.375rem;
 
-  transform: rotate(-90deg) translate(38.9vh, 21.9vw); //! TODO: Remove this Lucas' Screen size
-  /* transform: rotate(-90deg) translate(35.5vh, 20.75vw); //! TODO: Remove this #### Michel's Screen size */
+  /* transform: rotate(-90deg) translate(38.9vh, 21.9vw); //! TODO: Remove this Lucas' Screen size */
+  transform: rotate(-90deg) translate(35.5vh, 20.75vw); //! TODO: Remove this #### Michel's Screen size
 `
 
 export const TopContainer = styled.div`

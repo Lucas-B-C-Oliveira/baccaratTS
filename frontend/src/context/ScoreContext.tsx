@@ -750,7 +750,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     cleanTheBottomGameTable()
     cleanTheTopGameTable()
     saveValuesOfTheBars()
-    puttingTheValuesInTheBars(true)
+    puttingTheValuesInTheBars()
 
     lastShoeResultsBanker.current = currentShoeResultsBanker.current
     lastShoeResultsPlayer.current = currentShoeResultsPlayer.current
