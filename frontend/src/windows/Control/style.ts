@@ -42,16 +42,16 @@ export const TopButton = styled.button<ControlButtons>`
   height: 21.15vw;
 
   background: url(${(props) => props.backgroundImageNormal});
-  background-size: 100%;
+  background-size: 100% 100%;
 
   &:disabled {
     background: url(${(props) => props.backgroundImageDisabled});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 
   &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 `
 
@@ -85,16 +85,16 @@ export const MiddleButton = styled.button<ControlButtons>`
   }};
 
   background: url(${(props) => props.backgroundImageNormal});
-  background-size: 100%;
+  background-size: 100% 100%;
 
   &:disabled {
     background: url(${(props) => props.backgroundImageDisabled});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 
   &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 `
 
@@ -129,15 +129,15 @@ export const BottomButton = styled.button<ControlButtons>`
   }};
 
   background: url(${(props) => props.backgroundImageNormal});
-  background-size: 100%;
+  background-size: 100% 100%;
 
   &:disabled {
     background: url(${(props) => props.backgroundImageDisabled});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 
   &:not(:disabled):active {
     background: url(${(props) => props.backgroundImagePressed});
-    background-size: 100%;
+    background-size: 100% 100%;
   }
 `
