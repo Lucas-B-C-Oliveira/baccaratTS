@@ -17,6 +17,7 @@ import Player8 from '../../assets/scoreboard/player-8.png'
 import Player9 from '../../assets/scoreboard/player-9.png'
 import Banker8 from '../../assets/scoreboard/banker-8.png'
 import Banker9 from '../../assets/scoreboard/banker-9.png'
+import invisibleBall from '../../assets/scoreboard/ball-empty.png'
 import currentValuesUi from '../../assets/scoreboard/current-values-ui.png'
 import { ScoreBar } from './components/ScoreBar'
 import { useContext, useEffect, useRef } from 'react'
@@ -31,6 +32,7 @@ export const ballsImages = [
   Player9,
   Banker8,
   Banker9,
+  invisibleBall,
 ]
 
 export enum BallTypes {
@@ -41,6 +43,7 @@ export enum BallTypes {
   PLAYER_9,
   BANKER_8,
   BANKER_9,
+  INVISIBLE_BALL,
   DEFAULT,
 }
 
@@ -49,7 +52,7 @@ export function Scoreboard() {
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
-  const isDev = false //! TODO: Remove this variable and its checks
+  const isDev = true //! TODO: Remove this variable and its checks
 
   const FONT_SIZE_OF_MAIN_BAR = 190
   const HEIGHT_OF_MAIN_BAR = 5.0

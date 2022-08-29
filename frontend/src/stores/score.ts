@@ -1,6 +1,6 @@
 import create from 'zustand'
 
-interface Bar {
+export interface Bar {
   key: number
   x: number
   y: number

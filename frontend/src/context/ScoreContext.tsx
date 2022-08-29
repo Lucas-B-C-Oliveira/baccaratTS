@@ -6,7 +6,9 @@ import React, {
   useReducer,
   useRef,
 } from 'react'
+
 import { BallTypes } from '../windows/Scoreboard'
+import { Bar } from './../stores/score'
 
 interface ScoreContextType {
   addBallsInScore: (newBall: number) => void
@@ -99,12 +101,13 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const initialRowFree = useRef(0)
   const modifiedBottomBall = useRef<BallTypes>(BallTypes.DEFAULT)
   const cleanTheBottomBalls = useRef(false)
+  const bottomBallsBars = useRef<Bar>({} as Bar)
 
   /// ### Bottom Bars Variables
   const numberOfBarsInPreviousBall = useRef(0)
 
   const START_POSITION_X_FOR_BOTTOM_BAR = 35
-  const START_POSITION_Y_FOR_BOTTOM_BAR = 90
+  const START_POSITION_Y_FOR_BOTTOM_BAR = 102.4
   const BOTTOM_BAR_MULTIPLIER_FOR_Y = 11.4
 
   /// #### Bar Variables
@@ -188,9 +191,8 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
   function addBallsInScore(newBall: number) {
     if (
-      (newBall === BallTypes.TIE_HANDS_BALL &&
-        numberOfBarsInPreviousBall.current >= 6) ||
-      (newBall === BallTypes.TIE_HANDS_BALL && currentMatch.current === 0)
+      newBall === BallTypes.TIE_HANDS_BALL &&
+      numberOfBarsInPreviousBall.current >= 10
     )
       return
 
@@ -217,10 +219,10 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
     numberOfBallsInGame.current = numberOfBallsInGame.current + 1
     updateBar(ballForBarFill, numberOfBallsInGame.current)
-    updateCurrentShoeResults(newBall)
 
     addTopBall(newBall)
     addBottomBall(newBall)
+    updateCurrentShoeResults(newBall)
     currentMatch.current = currentMatch.current + 1
   }
 
@@ -281,11 +283,17 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         y: newYBarPosition,
       }
 
-      addBarToPreviousBottomBall(newBar)
-      return
+      if (currentShoeResultsHand.current !== 0) {
+        addBarToPreviousBottomBall(newBar)
+        return
+      } else {
+        bottomBallsBars.current = newBar
+      }
     }
 
-    numberOfBarsInPreviousBall.current = 0
+    if (currentShoeResultsHand.current !== 0)
+      numberOfBarsInPreviousBall.current = 0
+
     modifiedBottomBall.current = newBall
 
     switch (newBall) {
@@ -394,9 +402,15 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       position: newBottomPosition,
       image:
         modifiedBottomBall.current === BallTypes.DEFAULT
-          ? newBall
+          ? newBall === BallTypes.TIE_HANDS_BALL
+            ? BallTypes.INVISIBLE_BALL
+            : newBall
           : modifiedBottomBall.current,
-      bars: [],
+      bars:
+        currentShoeResultsHand.current === 0 &&
+          newBall === BallTypes.TIE_HANDS_BALL
+          ? [bottomBallsBars.current]
+          : [],
     }
     previousBottomBall.current = newBall
 
@@ -720,8 +734,14 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
       newBall === BallTypes.BANKER_9 ||
       newBall === BallTypes.PLAYER_8 ||
       newBall === BallTypes.PLAYER_9
-    )
+    ) {
       currentShoeResultsNatural.current = currentShoeResultsNatural.current + 1
+
+      if (newBall === BallTypes.BANKER_8 || newBall === BallTypes.BANKER_9)
+        currentShoeResultsBanker.current = currentShoeResultsBanker.current + 1
+      else if (newBall === BallTypes.PLAYER_8 || newBall === BallTypes.PLAYER_9)
+        currentShoeResultsPlayer.current = currentShoeResultsPlayer.current + 1
+    }
 
     currentShoeResultsHand.current = currentShoeResultsHand.current + 1
   }
