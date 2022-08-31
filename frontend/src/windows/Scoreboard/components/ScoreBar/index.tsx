@@ -10,9 +10,7 @@ interface BarProps {
     x: number
     y: number
   }
-  width: number
-  height: number
-  fontSize: number
+  isMain: boolean
   fillOfBanker: number
   fillOfPlayer: number
   fillOfTieHands: number
@@ -22,9 +20,7 @@ interface BarProps {
 }
 
 export function ScoreBar({
-  fontSize,
-  height,
-  width,
+  isMain,
   position,
   fillOfBanker,
   fillOfPlayer,
@@ -34,18 +30,18 @@ export function ScoreBar({
   textOfTieHand,
 }: BarProps) {
   return (
-    <OuterBarDiv width={width} height={height} position={position}>
+    <OuterBarDiv isMain={isMain} position={position}>
       <BankerBarDiv
+        isMain={isMain}
         widthOfBankerBar={fillOfBanker}
-        fontSize={fontSize}
       >{`${Math.round(textOfBanker)}%`}</BankerBarDiv>
       <PlayerBarDiv
+        isMain={isMain}
         widthOfPlayerBar={fillOfPlayer}
-        fontSize={fontSize}
       >{`${Math.round(textOfPlayer)}%`}</PlayerBarDiv>
       <TieHandsBarDiv
+        isMain={isMain}
         widthOfTieHandsBar={fillOfTieHands}
-        fontSize={fontSize}
       >{`${Math.round(textOfTieHand)}%`}</TieHandsBarDiv>
     </OuterBarDiv>
   )

@@ -1,45 +1,48 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 interface OuterBarProps {
   position: {
     x: number
     y: number
   }
-  width: number
-  height: number
+  isMain: boolean
 }
 
 interface InnerBarsProps {
   widthOfBankerBar?: number
   widthOfPlayerBar?: number
   widthOfTieHandsBar?: number
-  fontSize?: number
+  isMain: boolean
 }
 
 export const OuterBarDiv = styled.div<OuterBarProps>`
   position: relative;
+  overflow: hidden;
+  border-radius: 1.875rem;
+  box-shadow: 0rem 0.125rem 0.1875rem 0rem #0f172aae;
+  display: flex;
 
   left: ${(props) => {
-    return props.position.x + '%'
+    return props.position.x + 'vw'
   }};
 
   top: ${(props) => {
-    return props.position.y + '%'
+    return props.position.y + 'vh'
   }};
 
-  width: ${(props) => {
-    return props.width + '%'
-  }};
-
-  height: ${(props) => {
-    return props.height + '%'
-  }};
-
-  overflow: hidden;
-  border-radius: 1.875rem;
-  box-shadow: 0px 2px 3px 0px #0f172aae;
-  display: flex;
+  ${(props) =>
+    props.isMain === true
+      ? css`
+          height: 5vh;
+          width: 44.69vw;
+        `
+      : css`
+          height: 4vh;
+          width: 32.25vw;
+        `}
 `
+const FONT_SIZE_OF_MAIN_BAR = 2.2
+const FONT_SIZE_OF_LASTS_BAR = 1.7
 
 export const BankerBarDiv = styled.div<InnerBarsProps>`
   width: ${(props) => {
@@ -47,9 +50,14 @@ export const BankerBarDiv = styled.div<InnerBarsProps>`
   }};
 
   box-shadow: none;
-  font-size: ${(props) => {
-    return props.fontSize + '%'
-  }};
+  ${(props) =>
+    props.isMain === true
+      ? css`
+          font-size: ${() => FONT_SIZE_OF_MAIN_BAR + 'vw'};
+        `
+      : css`
+          font-size: ${() => FONT_SIZE_OF_LASTS_BAR + 'vw'};
+        `}
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -81,9 +89,14 @@ export const PlayerBarDiv = styled.div<InnerBarsProps>`
   }};
   box-shadow: none;
   display: flex;
-  font-size: ${(props) => {
-    return props.fontSize + '%'
-  }};
+  ${(props) =>
+    props.isMain === true
+      ? css`
+          font-size: ${() => FONT_SIZE_OF_MAIN_BAR + 'vw'};
+        `
+      : css`
+          font-size: ${() => FONT_SIZE_OF_LASTS_BAR + 'vw'};
+        `}
   flex-direction: column;
   text-align: center;
   white-space: nowrap;
@@ -117,9 +130,14 @@ export const TieHandsBarDiv = styled.div<InnerBarsProps>`
   border-bottom-right-radius: 30px;
   display: flex;
   box-shadow: none;
-  font-size: ${(props) => {
-    return props.fontSize + '%'
-  }};
+  ${(props) =>
+    props.isMain === true
+      ? css`
+          font-size: ${() => FONT_SIZE_OF_MAIN_BAR + 'vw'};
+        `
+      : css`
+          font-size: ${() => FONT_SIZE_OF_LASTS_BAR + 'vw'};
+        `}
   flex-direction: column;
   text-align: center;
   white-space: nowrap;
