@@ -9,6 +9,8 @@ interface ControlButtons {
   leftPosition?: number | null
 }
 
+const isDev = true
+
 export const ControlContainerMain = styled.div`
   width: 100vw;
   height: 100vh;
@@ -24,8 +26,23 @@ export const ControlContainer = styled.div`
   display: grid;
   row-gap: 5.375rem;
 
-  transform: rotate(-90deg) translate(38.9vh, 21.9vw); //! TODO: Remove this Lucas' Screen size
-  /* transform: rotate(-90deg) translate(35.5vh, 20.75vw); //! TODO: Remove this #### Michel's Screen size */
+  transform: ${() => {
+    const rotate = -90
+    let x = 20.75
+    let y = 35.5
+
+    if (isDev) {
+      //! TODO: Remove this Lucas' Screen size
+      y = 38.9
+      x = 21.9
+    } else {
+      //! TODO: Remove this #### Michel's Screen size
+      y = 35.5
+      x = 20.75
+    }
+
+    return `rotate(${rotate}deg) translate(${y}vh, ${x}vw)`
+  }};
 `
 
 export const TopContainer = styled.div`

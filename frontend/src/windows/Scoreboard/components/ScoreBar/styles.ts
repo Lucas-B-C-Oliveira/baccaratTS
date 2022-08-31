@@ -37,9 +37,7 @@ export const OuterBarDiv = styled.div<OuterBarProps>`
 
   overflow: hidden;
   border-radius: 1.875rem;
-  border-style: solid;
-  border-width: 0.0625rem;
-  border-color: #0f172a;
+  box-shadow: 0px 2px 3px 0px #0f172aae;
   display: flex;
 `
 
