@@ -106,9 +106,9 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   /// ### Bottom Bars Variables
   const numberOfBarsInPreviousBall = useRef(0)
 
-  const START_POSITION_X_FOR_BOTTOM_BAR = 35
-  const START_POSITION_Y_FOR_BOTTOM_BAR = 102.4
-  const BOTTOM_BAR_MULTIPLIER_FOR_Y = 11.4
+  const START_POSITION_X_FOR_BOTTOM_BAR = 1
+  const START_POSITION_Y_FOR_BOTTOM_BAR = 4.3929625
+  const BOTTOM_BAR_MULTIPLIER_FOR_Y = 0.4629625
 
   /// #### Bar Variables
 
@@ -771,6 +771,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     cleanTheTopGameTable()
     saveValuesOfTheBars()
     puttingTheValuesInTheBars()
+    numberOfBarsInPreviousBall.current = 0
 
     lastShoeResultsBanker.current = currentShoeResultsBanker.current
     lastShoeResultsPlayer.current = currentShoeResultsPlayer.current

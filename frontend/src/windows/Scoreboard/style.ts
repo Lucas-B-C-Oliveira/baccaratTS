@@ -69,8 +69,6 @@ export const ScoreTextSpan = styled.span<ScoreText>`
   white-space: nowrap;
 `
 
-export const DollarSignSpan = styled.span`` //! TODO: verify this
-
 export const CurrentValuesImage = styled.img`
   position: absolute;
 
@@ -104,10 +102,10 @@ export const BarImg = styled.img<Bar>`
   height: 0.37037vh;
 
   left: ${(props) => {
-    return props.x + '%'
+    return props.x + 'vw'
   }};
 
   top: ${(props) => {
-    return props.y + '%'
+    return props.y + 'vh'
   }};
 `
