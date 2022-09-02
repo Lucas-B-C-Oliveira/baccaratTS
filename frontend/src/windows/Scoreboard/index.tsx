@@ -23,6 +23,7 @@ import { ScoreBar } from './components/ScoreBar'
 import { useContext, useEffect, useRef } from 'react'
 import { ScoreContext } from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client'
+import { Video } from './components/ScoreBar/Video/Video'
 
 export const ballsImages = [
   Banker,
@@ -284,6 +285,8 @@ export function Scoreboard() {
         textOfPlayer={textOfPlayerAntepenultBar.current}
         textOfTieHand={textOfTieHandsAntepenultBar.current}
       />
+
+      <Video />
     </ScoreboardContainer>
   )
 }
