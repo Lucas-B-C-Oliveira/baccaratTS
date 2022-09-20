@@ -19,6 +19,11 @@ exports.connection = (io) => {
       io.emit('add ball', ball);
     });
 
+    socket.on('clear shoe', () => {
+      console.log("(clear shoe) IS CALLED! for:", socket.id)
+      io.emit('clear current shoe');
+    });
+
     socket.on("message", (message) => {
       console.log(`message from ${socket.id} : ${message}`)
     })

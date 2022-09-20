@@ -23,7 +23,7 @@ import { ScoreBar } from './components/ScoreBar'
 import { useContext, useEffect, useRef } from 'react'
 import { ScoreContext } from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client'
-import { Video } from './components/ScoreBar/Video/Video'
+import { Video } from './components/Video/Video'
 
 export const ballsImages = [
   Banker,
