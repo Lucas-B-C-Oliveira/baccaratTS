@@ -408,7 +408,7 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
           : modifiedBottomBall.current,
       bars:
         currentShoeResultsHand.current === 0 &&
-          newBall === BallTypes.TIE_HANDS_BALL
+        newBall === BallTypes.TIE_HANDS_BALL
           ? [bottomBallsBars.current]
           : [],
     }
@@ -476,16 +476,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfBankerBar.current -
-        numberOfEmptyBarFills *
-        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfBankerBar.current
       ) {
         fillOfBankerBar.current =
           fillOfBankerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfBankerBar.current -
-            numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfBankerBar.current === 0) {
           fillOfBankerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -496,16 +496,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfPlayerBar.current -
-        numberOfEmptyBarFills *
-        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfPlayerBar.current
       ) {
         fillOfPlayerBar.current =
           fillOfPlayerBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfPlayerBar.current -
-            numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfPlayerBar.current === 0) {
           fillOfPlayerBar.current = VISUAL_LIMIT_OF_BAR_FILL
@@ -516,16 +516,16 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
 
       if (
         fillOfTieHandsBar.current -
-        numberOfEmptyBarFills *
-        (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
+          numberOfEmptyBarFills *
+            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled) >=
         fillOfTieHandsBar.current
       ) {
         fillOfTieHandsBar.current =
           fillOfTieHandsBar.current === 0
             ? VISUAL_LIMIT_OF_BAR_FILL
             : fillOfTieHandsBar.current -
-            numberOfEmptyBarFills *
-            (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
+              numberOfEmptyBarFills *
+                (VISUAL_LIMIT_OF_BAR_FILL / numberOfBarsALittleFilled)
       } else {
         if (fillOfTieHandsBar.current === 0) {
           fillOfTieHandsBar.current = VISUAL_LIMIT_OF_BAR_FILL

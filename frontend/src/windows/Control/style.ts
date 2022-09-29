@@ -9,7 +9,7 @@ interface ControlButtons {
   leftPosition?: number | null
 }
 
-const isDev = true
+const isDev = false
 
 export const ControlContainerMain = styled.div`
   width: 100vw;

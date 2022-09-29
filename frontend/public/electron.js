@@ -1,13 +1,53 @@
 
-const { app, BrowserWindow, screen, webFrame, webFrameMain } = require('electron')
+const { app, BrowserWindow, screen } = require('electron')
 const path = require('path')
 const createProcess = require('child_process').spawn
+const drivelist = require('drivelist');
+const fs = require('fs-extra')
 
 let server
 
+async function getFilesOfThePendrive() {
+  const drives = await drivelist.list();
+  let basePathOfThePendrive = ''
+
+  drives.forEach((drive) => {
+    if (drive.isRemovable && drive.isUSB) {
+      basePathOfThePendrive = drive.mountpoints[0].path
+    }
+  });
+
+  // console.log(basePathOfThePendrive)
+
+  try {
+
+    await fs.copy(basePathOfThePendrive + '\\a', path.join(__dirname, "./../src/assets/a"))
+    // await fs.copy(basePathOfThePendrive + '\\a', path.join(__dirname, "../public/assets/a"))
+    console.log('success!')
+
+    await fs.copy(basePathOfThePendrive + '\\b', path.join(__dirname, "../src/assets/b"))
+    // await fs.copy(basePathOfThePendrive + '\\b', path.join(__dirname, "../public/assets/b"))
+    console.log('success!')
+
+    await fs.copy(basePathOfThePendrive + '\\c', path.join(__dirname, "../src/assets/c"))
+    // await fs.copy(basePathOfThePendrive + '\\c', path.join(__dirname, "../public/assets/c"))
+    console.log('success!')
+
+    await fs.copy(basePathOfThePendrive + '\\d', path.join(__dirname, "../src/assets/d"))
+    // await fs.copy(basePathOfThePendrive + '\\d', path.join(__dirname, "../public/assets/d"))
+    console.log('success!')
+
+  } catch (err) {
+    console.error(err)
+  }
+
+}
+
 function createWindow() {
 
-  const isDev = true //! TODO: Remove this variable and its checks
+  getFilesOfThePendrive()
+
+  const isDev = false //! TODO: Remove this variable and its checks
   let urlServer = ''
 
   if (isDev) {

@@ -23,7 +23,9 @@ import { ScoreBar } from './components/ScoreBar'
 import { useContext, useEffect, useRef } from 'react'
 import { ScoreContext } from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client'
-import { Video } from './components/Video/Video'
+import { Video } from './components/Video/Video' //! TODO: Remove this
+import { ImageBanner } from './components/Image/ImageBanner' //! TODO: Remove this
+import { Advertising } from './components/Advertising/index'
 
 export const ballsImages = [
   Banker,
@@ -53,7 +55,12 @@ export function Scoreboard() {
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
-  const isDev = true //! TODO: Remove this variable and its checks
+  const isDev = false //! TODO: Remove this variable and its checks
+
+  const bannerType = useRef<'image' | 'video'>('video') //! TODO: Remove this variable and its checks
+
+  const folderAdvertising = useRef<undefined | 'a' | 'b' | 'c' | 'd'>(undefined) //! TODO: Remove this variable and its checks
+  const nameAdvertising = useRef<undefined | string>(undefined) //! TODO: Remove this variable and its checks
 
   /// ### Bars Variables
   const POSITION_X_OF_LASTS_BARS = 31.2
@@ -139,6 +146,7 @@ export function Scoreboard() {
 
         if (calls.current === 1) {
           addBallsInScore(ball)
+          bannerType.current = 'image'
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -149,6 +157,7 @@ export function Scoreboard() {
 
         if (calls.current === 1) {
           clearShoe()
+          bannerType.current = 'video'
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -156,10 +165,16 @@ export function Scoreboard() {
     } else {
       socket.current.on('add ball', (ball: number) => {
         addBallsInScore(ball)
+        bannerType.current = 'image'
+        folderAdvertising.current = 'a'
+        nameAdvertising.current = '1'
       })
 
       socket.current.on('clear current shoe', () => {
         clearShoe()
+        bannerType.current = 'video'
+        folderAdvertising.current = 'a'
+        nameAdvertising.current = '2'
       })
     }
   }, [])
@@ -286,7 +301,12 @@ export function Scoreboard() {
         textOfTieHand={textOfTieHandsAntepenultBar.current}
       />
 
-      <Video />
+      <Advertising
+        currentAdvertising={folderAdvertising.current}
+        currentBannerImage={nameAdvertising.current}
+      />
+
+      {/* {bannerType.current === 'video' ? <Video /> : <ImageBanner image={1} />} */}
     </ScoreboardContainer>
   )
 }
