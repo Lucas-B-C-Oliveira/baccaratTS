@@ -237,7 +237,6 @@ export function Control() {
             backgroundImagePressed={tiePressedBgBtn}
             backgroundImageDisabled={tieDisabledBgBtn}
             specialSize={true}
-            paddingTop={4.375}
             onClick={handleTieHandsButton}
             disabled={
               buttonOnConfirmation.current !== ButtonsName.TIE_HANDS
@@ -276,7 +275,6 @@ export function Control() {
               backgroundImagePressed={cancelPressedBgBtn}
               backgroundImageDisabled={cancelDisabledBgBtn}
               specialSize={true}
-              leftPosition={5.891}
               onClick={handleCancelButton}
             />
           ) : (
@@ -285,7 +283,6 @@ export function Control() {
               backgroundImagePressed={cancelLastPressedBgBtn}
               backgroundImageDisabled={cancelLastDisabledBgBtn}
               specialSize={true}
-              leftPosition={5.891}
               onClick={handleCancelLastButton}
             />
           )}

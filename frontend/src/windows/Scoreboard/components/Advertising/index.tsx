@@ -1,39 +1,47 @@
-// import { useDynamicFileImport } from 'src/hooks/useDynamicFileImport'
-import { useDynamicFileImport } from '../../../../hooks/useDynamicFileImport'
-import { BannerImg } from './../Image/styles'
+import ReactPlayer from 'react-player'
+import { BannerImg, VideoContainer } from './styles'
+import { ImageBox } from './../ImageBox/index'
+import Lottie from 'lottie-react'
 
 interface AdvertisingProps {
-  currentBannerImage?: string | undefined
-  currentAdvertising?: 'a' | 'b' | 'c' | 'd'
+  advertisingFolder?: 'a' | 'b' | 'c' | 'd'
+  path?: string
+  assets: [] | [string] | any
 }
 
 export function Advertising({
-  currentBannerImage,
-  currentAdvertising,
+  advertisingFolder,
+  path,
+  assets,
 }: AdvertisingProps) {
-  const { error, loading, file } = useDynamicFileImport({
-    fileName: currentBannerImage,
-    advertisementsFolder: currentAdvertising,
-  })
-
-  console.log('error', error)
-  console.log('loading', loading)
-
-  if (error) return <div>Error</div>
-  if (loading) return <div>Loading</div>
+  console.log('advertisingFolder', advertisingFolder)
+  console.log('path', path)
+  // console.log('assets', assets)
 
   return (
     <>
       {(() => {
-        switch (currentAdvertising) {
+        switch (advertisingFolder) {
           case 'a':
-            return <BannerImg src={file} />
+            return <ImageBox frameDuration={3000} frames={assets} />
           case 'b':
-            return <BannerImg src={''} />
+            return (
+              <VideoContainer>
+                <ReactPlayer
+                  muted={true}
+                  loop={true}
+                  playing={true}
+                  controls={false}
+                  height={'26.48vh'}
+                  width={'26.88vw'}
+                  url={path}
+                />
+              </VideoContainer>
+            )
           case 'c':
-            return <BannerImg src={''} />
-          case 'd':
-            return <BannerImg src={''} />
+            return <ImageBox frameDuration={1500} frames={assets} />
+          // case 'd':
+          //   return <Lottie animationData={groovyWalkAnimation} loop={true} />
           default:
             return null
         }

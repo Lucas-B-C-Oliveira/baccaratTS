@@ -20,11 +20,9 @@ import Banker9 from '../../assets/scoreboard/banker-9.png'
 import invisibleBall from '../../assets/scoreboard/ball-empty.png'
 import currentValuesUi from '../../assets/scoreboard/current-values-ui.png'
 import { ScoreBar } from './components/ScoreBar'
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { ScoreContext } from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client'
-import { Video } from './components/Video/Video' //! TODO: Remove this
-import { ImageBanner } from './components/Image/ImageBanner' //! TODO: Remove this
 import { Advertising } from './components/Advertising/index'
 
 export const ballsImages = [
@@ -57,10 +55,11 @@ export function Scoreboard() {
   const calls = useRef(0) //! TODO: Remove this variable and its checks
   const isDev = false //! TODO: Remove this variable and its checks
 
-  const bannerType = useRef<'image' | 'video'>('video') //! TODO: Remove this variable and its checks
-
-  const folderAdvertising = useRef<undefined | 'a' | 'b' | 'c' | 'd'>(undefined) //! TODO: Remove this variable and its checks
-  const nameAdvertising = useRef<undefined | string>(undefined) //! TODO: Remove this variable and its checks
+  const [folderAdvertising, setfolderAdvertising] = useState<
+    undefined | 'a' | 'b' | 'c' | 'd'
+  >('b') //! TODO: Remove this variable and its checks
+  const pathAdvertising = useRef<undefined | string | any>('') //! TODO: Remove this variable and its checks
+  const assets = useRef<[''] | [] | string[]>([]) //! TODO: Remove this variable and its checks
 
   /// ### Bars Variables
   const POSITION_X_OF_LASTS_BARS = 31.2
@@ -140,13 +139,15 @@ export function Scoreboard() {
     socket.current = io('ws://localhost:9014', { forceNew: true })
 
     if (isDev) {
+      getData('b', 0)
+
       //! TODO: Remove this check "isDev"
       socket.current.on('add ball', (ball: number) => {
         calls.current = calls.current + 1
 
         if (calls.current === 1) {
           addBallsInScore(ball)
-          bannerType.current = 'image'
+          getData('a', 0)
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -157,7 +158,7 @@ export function Scoreboard() {
 
         if (calls.current === 1) {
           clearShoe()
-          bannerType.current = 'video'
+          getData('b', 0)
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -165,19 +166,32 @@ export function Scoreboard() {
     } else {
       socket.current.on('add ball', (ball: number) => {
         addBallsInScore(ball)
-        bannerType.current = 'image'
-        folderAdvertising.current = 'a'
-        nameAdvertising.current = '1'
+        getData('a', 0)
       })
 
       socket.current.on('clear current shoe', () => {
+        getData('b', 0)
         clearShoe()
-        bannerType.current = 'video'
-        folderAdvertising.current = 'a'
-        nameAdvertising.current = '2'
       })
     }
   }, [])
+
+  async function getData(folder: 'a' | 'b' | 'c' | 'd', file: number) {
+    const data: any = localStorage.getItem(folder)
+    const dataJSON = JSON.parse(data)
+
+    // console.log('dataJSON', dataJSON)
+
+    const dataArray = Object.keys(dataJSON).map((i) => dataJSON[Number(i)])
+
+    console.log('dataArray', dataArray)
+
+    pathAdvertising.current = dataArray[file]
+
+    assets.current = dataArray.map((path: string) => path)
+
+    setfolderAdvertising(folder)
+  }
 
   return (
     <ScoreboardContainer>
@@ -302,11 +316,11 @@ export function Scoreboard() {
       />
 
       <Advertising
-        currentAdvertising={folderAdvertising.current}
-        currentBannerImage={nameAdvertising.current}
+        advertisingFolder={folderAdvertising}
+        path={pathAdvertising.current}
+        assets={assets.current}
       />
-
-      {/* {bannerType.current === 'video' ? <Video /> : <ImageBanner image={1} />} */}
+      {/* // fileName={`${basePathToAdvertising}/${folderAdvertising.current}/${nameAdvertising.current}.jpg`} */}
     </ScoreboardContainer>
   )
 }

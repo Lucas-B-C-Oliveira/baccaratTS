@@ -4,61 +4,120 @@ const path = require('path')
 const createProcess = require('child_process').spawn
 const drivelist = require('drivelist');
 const fs = require('fs-extra')
+const fsPromises = require('fs/promises')
 
-let server
+const isDev = false //! TODO: Remove this variable and its checks
+
+let urlServer = ''
+let basePathToAdvertising
+let serverExe
+
+if (isDev) {
+  urlServer = path.join(__dirname, "./server/server.exe")
+  basePathToAdvertising = path.join(__dirname, "./advertising")
+}
+else {
+  urlServer = path.join(process.resourcesPath, "./build/server/server.exe")
+  basePathToAdvertising = path.join(process.resourcesPath, "./build/advertising")
+}
+
+serverExe = createProcess(urlServer)
+
+/// ### Functions ___________________________________
 
 async function getFilesOfThePendrive() {
-  const drives = await drivelist.list();
-  let basePathOfThePendrive = ''
-
-  drives.forEach((drive) => {
-    if (drive.isRemovable && drive.isUSB) {
-      basePathOfThePendrive = drive.mountpoints[0].path
-    }
-  });
-
-  // console.log(basePathOfThePendrive)
-
+  let sucessInCopyingFiles = false
   try {
+    const drives = await drivelist.list();
+    let basePathOfThePendrive = ''
 
-    await fs.copy(basePathOfThePendrive + '\\a', path.join(__dirname, "./../src/assets/a"))
-    // await fs.copy(basePathOfThePendrive + '\\a', path.join(__dirname, "../public/assets/a"))
-    console.log('success!')
+    drives.forEach((drive) => {
+      if (drive.isRemovable && drive.isUSB) {
+        basePathOfThePendrive = drive.mountpoints[0].path
+      }
+    });
 
-    await fs.copy(basePathOfThePendrive + '\\b', path.join(__dirname, "../src/assets/b"))
-    // await fs.copy(basePathOfThePendrive + '\\b', path.join(__dirname, "../public/assets/b"))
-    console.log('success!')
+    fs.copySync(basePathOfThePendrive + '\\a', basePathToAdvertising + "/a")
+    fs.copySync(basePathOfThePendrive + '\\b', basePathToAdvertising + "/b")
+    fs.copySync(basePathOfThePendrive + '\\c', basePathToAdvertising + "/c")
+    fs.copySync(basePathOfThePendrive + '\\d', basePathToAdvertising + "/d")
 
-    await fs.copy(basePathOfThePendrive + '\\c', path.join(__dirname, "../src/assets/c"))
-    // await fs.copy(basePathOfThePendrive + '\\c', path.join(__dirname, "../public/assets/c"))
-    console.log('success!')
-
-    await fs.copy(basePathOfThePendrive + '\\d', path.join(__dirname, "../src/assets/d"))
-    // await fs.copy(basePathOfThePendrive + '\\d', path.join(__dirname, "../public/assets/d"))
-    console.log('success!')
-
-  } catch (err) {
-    console.error(err)
+    sucessInCopyingFiles = true
   }
+  catch (err) {
+    sucessInCopyingFiles = false
+    console.error(err)
+    console.error('sucessInCopyingFiles', sucessInCopyingFiles)
+    console.log('1 catch')
+  }
+
+  return new Promise(function (resolve, reject) {
+    if (sucessInCopyingFiles) resolve('SUCESS in copying files of Pendrive')
+    else reject('FAILED in copying files of Pendrive')
+  })
 
 }
 
-function createWindow() {
-
-  getFilesOfThePendrive()
-
-  const isDev = false //! TODO: Remove this variable and its checks
-  let urlServer = ''
-
-  if (isDev) {
-    urlServer = path.join(__dirname, "./server/server.exe")
+async function saveAllAdvertisingAssetsInLocalStorage(window) {
+  let successInSaveAllInfoInLocalStorage = false
+  try {
+    await saveInfoInLocalStorage(basePathToAdvertising + "/a", window)
+    await saveInfoInLocalStorage(basePathToAdvertising + "/b", window)
+    await saveInfoInLocalStorage(basePathToAdvertising + "/c", window)
+    await saveInfoInLocalStorage(basePathToAdvertising + "/d", window)
+    successInSaveAllInfoInLocalStorage = true
+  } catch (err) {
+    successInSaveAllInfoInLocalStorage = false
+    console.error(err)
+    console.error('saveAllInfoInLocalStorage', successInSaveAllInfoInLocalStorage)
+    console.log('4 catch')
   }
-  else {
-    urlServer = path.join(process.resourcesPath, "./build/server/server.exe")
+
+  return new Promise(function (resolve, reject) {
+    if (successInSaveAllInfoInLocalStorage) resolve('SUCCESS in save all files in database')
+    else reject('FAILED in save all files in database')
+  })
+}
+
+async function saveInfoInLocalStorage(filesFolderPath, window) {
+  let successInSaveAssetsInLocalStorage = false
+  try {
+    const files = await fsPromises.readdir(filesFolderPath)
+    let advertisingFolderName = ''
+    const pathsObj = {}
+
+    const paths = files.map((file) => {
+      advertisingFolderName = path.dirname(path.join(filesFolderPath, file)).slice(-1) /// returns a name of path
+      const pathOfFile = path.join(filesFolderPath, file) /// get a path of file
+      return pathOfFile
+    })
+
+    for (let i = 0; i < paths.length; i++) {
+      pathsObj[i] = paths[i]
+    }
+
+    const data = JSON.stringify(pathsObj)
+
+    const dataReformada = data.replaceAll('\\\\', '/')
+
+    window.webContents.executeJavaScript(`window.localStorage.setItem('${advertisingFolderName}', '${dataReformada}');`)
+    successInSaveAssetsInLocalStorage = true
+
+  }
+  catch (err) {
+    successInSaveAssetsInLocalStorage = false
+    console.error(err)
+    console.error('successInSaveAssetsInLocalStorage', successInSaveAssetsInLocalStorage)
+    console.log('3 catch')
   }
 
-  server = createProcess(urlServer)
+  return new Promise(function (resolve, reject) {
+    if (successInSaveAssetsInLocalStorage) resolve('SUCCESS in copying files of Pendrive')
+    else reject('FAILED in copying files of Pendrive')
+  })
+}
 
+async function createWindow() {
   const displays = screen.getAllDisplays()
 
   const scoreboardWindow = new BrowserWindow({
@@ -69,7 +128,18 @@ function createWindow() {
     kiosk: true,
     fullscreen: true,
     frame: false,
+    webPreferences: {
+      webSecurity: false
+    }
   })
+
+  try {
+    await getFilesOfThePendrive()
+    await saveAllAdvertisingAssetsInLocalStorage(scoreboardWindow)
+  } catch (error) {
+    console.log(error)
+    console.log('5 catch')
+  }
 
   const controlWindow = new BrowserWindow({
     x: displays[1].bounds.x,
@@ -79,6 +149,9 @@ function createWindow() {
     kiosk: true,
     fullscreen: true,
     frame: false,
+    webPreferences: {
+      webSecurity: false
+    }
   })
 
   let urlBase
@@ -92,7 +165,7 @@ function createWindow() {
   }
   else {
     urlBase = `file://${path.join(__dirname, '../build/index.html')}`
-    scoreboardUlr = urlBase + '#/'
+    scoreboardUlr = urlBase + `#/`
     controlUlr = urlBase + '#/control'
   }
 
@@ -106,17 +179,21 @@ function createWindow() {
     controlWindow.show()
   })
 
-  controlWindow.on('close', () => { closeAll() })
-  scoreboardWindow.on('close', () => { closeAll() })
+  controlWindow.on('close', () => { closeAll(scoreboardWindow) })
+  scoreboardWindow.on('close', () => { closeAll(scoreboardWindow) })
+  app.on("window-all-closed", () => { closeAll(scoreboardWindow) })
 }
 
-app.whenReady().then(() => {
+async function closeAll(window) {
+  serverExe.stdin.end()
+  window.webContents.executeJavaScript(`window.localStorage.clear()`)
+  app.quit()
+}
+
+/// #### Events -> Start App ____________________________
+
+app.whenReady().then(async () => {
   createWindow()
 })
 
-app.on("window-all-closed", () => { closeAll() })
 
-function closeAll() {
-  app.quit()
-  server.stdin.end()
-}
