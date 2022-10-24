@@ -7,8 +7,10 @@ interface ImageContainerProps {
 }
 
 export function ImageBox({ frames, frameDuration }: ImageContainerProps) {
-  const [imagePath, setImagePath] = useState<string>('')
+  const [imagePath, setImagePath] = useState<string>(frames[0] || '')
   const currentIndex = useRef(0)
+
+  console.log('chamou!')
 
   useEffect(() => {
     if (frames.length > 0) {

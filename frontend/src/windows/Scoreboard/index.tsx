@@ -53,13 +53,11 @@ export function Scoreboard() {
   const ballsBottom = useScoreStore((state) => state.ballsBottom)
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
-  const isDev = false //! TODO: Remove this variable and its checks
+  const isDev = true //! TODO: Remove this variable and its checks
 
-  const [folderAdvertising, setfolderAdvertising] = useState<
-    undefined | 'a' | 'b' | 'c' | 'd'
-  >('b') //! TODO: Remove this variable and its checks
   const pathAdvertising = useRef<undefined | string | any>('') //! TODO: Remove this variable and its checks
   const assets = useRef<[''] | [] | string[]>([]) //! TODO: Remove this variable and its checks
+  const advertisingFolder = useRef<undefined | 'a' | 'b' | 'c' | 'd'>(undefined) //! TODO: Remove this variable and its checks
 
   /// ### Bars Variables
   const POSITION_X_OF_LASTS_BARS = 31.2
@@ -139,8 +137,6 @@ export function Scoreboard() {
     socket.current = io('ws://localhost:9014', { forceNew: true })
 
     if (isDev) {
-      getData('b', 0)
-
       //! TODO: Remove this check "isDev"
       socket.current.on('add ball', (ball: number) => {
         calls.current = calls.current + 1
@@ -158,7 +154,7 @@ export function Scoreboard() {
 
         if (calls.current === 1) {
           clearShoe()
-          getData('b', 0)
+          getData('c', 0)
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -166,11 +162,11 @@ export function Scoreboard() {
     } else {
       socket.current.on('add ball', (ball: number) => {
         addBallsInScore(ball)
-        getData('a', 0)
+        getData('b', 0)
       })
 
       socket.current.on('clear current shoe', () => {
-        getData('b', 0)
+        getData('d', 3)
         clearShoe()
       })
     }
@@ -180,17 +176,12 @@ export function Scoreboard() {
     const data: any = localStorage.getItem(folder)
     const dataJSON = JSON.parse(data)
 
-    // console.log('dataJSON', dataJSON)
-
     const dataArray = Object.keys(dataJSON).map((i) => dataJSON[Number(i)])
 
     console.log('dataArray', dataArray)
-
     pathAdvertising.current = dataArray[file]
-
     assets.current = dataArray.map((path: string) => path)
-
-    setfolderAdvertising(folder)
+    advertisingFolder.current = folder
   }
 
   return (
@@ -316,11 +307,10 @@ export function Scoreboard() {
       />
 
       <Advertising
-        advertisingFolder={folderAdvertising}
+        advertisingFolder={advertisingFolder.current}
         path={pathAdvertising.current}
         assets={assets.current}
       />
-      {/* // fileName={`${basePathToAdvertising}/${folderAdvertising.current}/${nameAdvertising.current}.jpg`} */}
     </ScoreboardContainer>
   )
 }

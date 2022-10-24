@@ -42,13 +42,14 @@
     ]
   },
   "dependencies": {
+    "@lottiefiles/react-lottie-player": "^3.4.7",
+    "@vime/core": "^5.3.3",
+    "@vime/react": "^5.3.3",
     "drivelist": "^11.0.0",
     "fs-extra": "^10.1.0",
-    "lottie-react": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "react-player": "^2.10.1",
     "react-router-dom": "^6.3.0",
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",

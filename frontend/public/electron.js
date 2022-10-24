@@ -6,7 +6,7 @@ const drivelist = require('drivelist');
 const fs = require('fs-extra')
 const fsPromises = require('fs/promises')
 
-const isDev = false //! TODO: Remove this variable and its checks
+const isDev = true //! TODO: Remove this variable and its checks
 
 let urlServer = ''
 let basePathToAdvertising
@@ -15,6 +15,7 @@ let serverExe
 if (isDev) {
   urlServer = path.join(__dirname, "./server/server.exe")
   basePathToAdvertising = path.join(__dirname, "./advertising")
+  console.log('basePathToAdvertising', basePathToAdvertising) //! TODO: Remove this variable and its checks
 }
 else {
   urlServer = path.join(process.resourcesPath, "./build/server/server.exe")
@@ -88,7 +89,15 @@ async function saveInfoInLocalStorage(filesFolderPath, window) {
 
     const paths = files.map((file) => {
       advertisingFolderName = path.dirname(path.join(filesFolderPath, file)).slice(-1) /// returns a name of path
-      const pathOfFile = path.join(filesFolderPath, file) /// get a path of file
+
+      let pathOfFile
+      if (isDev) {
+        pathOfFile = `http://localhost:5177/advertising/${advertisingFolderName}/${file}`
+        console.log('pathOfFile', pathOfFile)
+      }
+      else pathOfFile = path.join(filesFolderPath, file) /// get a path of file
+
+
       return pathOfFile
     })
 

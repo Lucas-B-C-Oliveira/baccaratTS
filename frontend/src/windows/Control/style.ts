@@ -7,7 +7,7 @@ interface ControlButtons {
   specialSize?: boolean
 }
 
-const isDev = false
+const isDev = true
 
 export const ControlContainerMain = styled.div`
   width: 100vw;
