@@ -8,20 +8,21 @@ interface AdvertisingProps {
   advertisingFolder?: 'a' | 'b' | 'c' | 'd'
   path: string
   assets: [] | [string] | any
+  frameDuration?: number
 }
 
 export function Advertising({
   advertisingFolder,
   path,
   assets,
+  frameDuration,
 }: AdvertisingProps) {
-  console.log('path', path)
   return (
     <>
       {(() => {
         switch (advertisingFolder) {
           case 'a':
-            return <ImageBox frameDuration={900} frames={assets} />
+            return <ImageBox frameDuration={frameDuration} frames={assets} />
           case 'b':
             return (
               <VideoContainer>
@@ -33,7 +34,7 @@ export function Advertising({
               </VideoContainer>
             )
           case 'c':
-            return <ImageBox frameDuration={1100} frames={assets} />
+            return <ImageBox frameDuration={frameDuration} frames={assets} />
           case 'd':
             return (
               <LottieContainer>

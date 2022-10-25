@@ -11,8 +11,8 @@ export const VideoContainer = styled.div`
 
 export const LottieContainer = styled.div`
   position: absolute;
-  left: 50vw;
-  top: 10vw;
-  height: 26.48vh;
-  width: 26.88vw;
+  left: 17vw;
+  top: -5vw;
+  height: 70vh;
+  width: 70vw;
 `

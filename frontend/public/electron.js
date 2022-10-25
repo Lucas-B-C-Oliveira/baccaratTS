@@ -15,7 +15,7 @@ let serverExe
 if (isDev) {
   urlServer = path.join(__dirname, "./server/server.exe")
   basePathToAdvertising = path.join(__dirname, "./advertising")
-  console.log('basePathToAdvertising', basePathToAdvertising) //! TODO: Remove this variable and its checks
+  // console.log('basePathToAdvertising', basePathToAdvertising) //! TODO: Remove this variable and its checks
 }
 else {
   urlServer = path.join(process.resourcesPath, "./build/server/server.exe")
@@ -93,7 +93,7 @@ async function saveInfoInLocalStorage(filesFolderPath, window) {
       let pathOfFile
       if (isDev) {
         pathOfFile = `http://localhost:5177/advertising/${advertisingFolderName}/${file}`
-        console.log('pathOfFile', pathOfFile)
+        // console.log('pathOfFile', pathOfFile) //! TODO: Remove this console.log()
       }
       else pathOfFile = path.join(filesFolderPath, file) /// get a path of file
 

@@ -20,8 +20,11 @@ import Banker9 from '../../assets/scoreboard/banker-9.png'
 import invisibleBall from '../../assets/scoreboard/ball-empty.png'
 import currentValuesUi from '../../assets/scoreboard/current-values-ui.png'
 import { ScoreBar } from './components/ScoreBar'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { ScoreContext } from '../../context/ScoreContext'
+import { useContext, useEffect, useRef } from 'react'
+import {
+  ArgumentsOfApplySettingsInAdvertising,
+  ScoreContext,
+} from '../../context/ScoreContext'
 import { io, Socket } from 'socket.io-client'
 import { Advertising } from './components/Advertising/index'
 
@@ -54,10 +57,6 @@ export function Scoreboard() {
   const socket = useRef<null | Socket>(null)
   const calls = useRef(0) //! TODO: Remove this variable and its checks
   const isDev = true //! TODO: Remove this variable and its checks
-
-  const pathAdvertising = useRef<undefined | string | any>('') //! TODO: Remove this variable and its checks
-  const assets = useRef<[''] | [] | string[]>([]) //! TODO: Remove this variable and its checks
-  const advertisingFolder = useRef<undefined | 'a' | 'b' | 'c' | 'd'>(undefined) //! TODO: Remove this variable and its checks
 
   /// ### Bars Variables
   const POSITION_X_OF_LASTS_BARS = 31.2
@@ -131,7 +130,44 @@ export function Scoreboard() {
     lastShoeResultsNatural,
     lastShoeResultsTie,
     lastShoeResultsHand,
+
+    /// # Advertising Variables
+    applySettingsInAdvertising,
+    frameDuration,
+    advertisingFolder,
+    pathAdvertising,
+    assets,
   } = useContext(ScoreContext)
+
+  //! TODO: setSettingsToAdvertising its just for test Delete this function in the future
+  function setSettingsToAdvertising(ball: number) {
+    const newSettingsToAdvertising = {} as ArgumentsOfApplySettingsInAdvertising
+
+    switch (ball) {
+      case BallTypes.PLAYER:
+        newSettingsToAdvertising.folder = 'a'
+        newSettingsToAdvertising.fileStartToShow = 0
+        newSettingsToAdvertising.frameDurationTime = 900
+        break
+      case BallTypes.BANKER:
+        newSettingsToAdvertising.folder = 'b'
+        newSettingsToAdvertising.fileStartToShow = 0
+        newSettingsToAdvertising.frameDurationTime = 0
+        break
+      case BallTypes.PLAYER_8:
+        newSettingsToAdvertising.folder = 'c'
+        newSettingsToAdvertising.fileStartToShow = 0
+        newSettingsToAdvertising.frameDurationTime = 1000
+        break
+      case BallTypes.BANKER_8:
+        newSettingsToAdvertising.folder = 'd'
+        newSettingsToAdvertising.fileStartToShow = 3
+        newSettingsToAdvertising.frameDurationTime = 0
+        break
+    }
+
+    applySettingsInAdvertising(newSettingsToAdvertising)
+  }
 
   useEffect(() => {
     socket.current = io('ws://localhost:9014', { forceNew: true })
@@ -143,7 +179,7 @@ export function Scoreboard() {
 
         if (calls.current === 1) {
           addBallsInScore(ball)
-          getData('a', 0)
+          setSettingsToAdvertising(ball) //! TODO: Delete this function in the future
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -151,10 +187,8 @@ export function Scoreboard() {
 
       socket.current.on('clear current shoe', () => {
         calls.current = calls.current + 1
-
         if (calls.current === 1) {
           clearShoe()
-          getData('c', 0)
         } else if (calls.current > 1) {
           calls.current = 0
         }
@@ -162,27 +196,14 @@ export function Scoreboard() {
     } else {
       socket.current.on('add ball', (ball: number) => {
         addBallsInScore(ball)
-        getData('b', 0)
+        setSettingsToAdvertising(ball) //! TODO: Delete this function in the future
       })
 
       socket.current.on('clear current shoe', () => {
-        getData('d', 3)
         clearShoe()
       })
     }
   }, [])
-
-  async function getData(folder: 'a' | 'b' | 'c' | 'd', file: number) {
-    const data: any = localStorage.getItem(folder)
-    const dataJSON = JSON.parse(data)
-
-    const dataArray = Object.keys(dataJSON).map((i) => dataJSON[Number(i)])
-
-    console.log('dataArray', dataArray)
-    pathAdvertising.current = dataArray[file]
-    assets.current = dataArray.map((path: string) => path)
-    advertisingFolder.current = folder
-  }
 
   return (
     <ScoreboardContainer>
@@ -307,6 +328,7 @@ export function Scoreboard() {
       />
 
       <Advertising
+        frameDuration={frameDuration.current}
         advertisingFolder={advertisingFolder.current}
         path={pathAdvertising.current}
         assets={assets.current}

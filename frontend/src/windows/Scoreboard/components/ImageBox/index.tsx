@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 interface ImageContainerProps {
   frames: [] | [string]
-  frameDuration: number
+  frameDuration?: number
 }
 
 export function ImageBox({ frames, frameDuration }: ImageContainerProps) {

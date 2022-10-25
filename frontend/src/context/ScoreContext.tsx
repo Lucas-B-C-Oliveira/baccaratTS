@@ -10,6 +10,12 @@ import React, {
 import { BallTypes } from '../windows/Scoreboard'
 import { Bar } from './../stores/score'
 
+export interface ArgumentsOfApplySettingsInAdvertising {
+  folder?: 'a' | 'b' | 'c' | 'd'
+  fileStartToShow?: number
+  frameDurationTime?: number
+}
+
 interface ScoreContextType {
   addBallsInScore: (newBall: number) => void
   clearShoe: () => void
@@ -50,6 +56,15 @@ interface ScoreContextType {
   currentMinBet: React.MutableRefObject<number>
   currentMaxBet: React.MutableRefObject<number>
   currentMaxTie: React.MutableRefObject<number>
+  applySettingsInAdvertising: ({
+    folder,
+    fileStartToShow,
+    frameDurationTime,
+  }: ArgumentsOfApplySettingsInAdvertising) => void
+  frameDuration: React.MutableRefObject<number | undefined>
+  pathAdvertising: React.MutableRefObject<string>
+  assets: React.MutableRefObject<[''] | [] | string[]>
+  advertisingFolder: React.MutableRefObject<'a' | 'b' | 'c' | 'd' | undefined>
 }
 
 interface ScoreContextProviderProps {
@@ -188,6 +203,12 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
   const lastShoeResultsNatural = useRef<number>(0)
   const lastShoeResultsTie = useRef<number>(0)
   const lastShoeResultsHand = useRef<number>(0)
+
+  /// # Advertising Variables
+  const frameDuration = useRef<undefined | number>(0)
+  const pathAdvertising = useRef<undefined | string | any>('')
+  const assets = useRef<[''] | [] | string[]>([])
+  const advertisingFolder = useRef<undefined | 'a' | 'b' | 'c' | 'd'>(undefined)
 
   function addBallsInScore(newBall: number) {
     if (
@@ -788,6 +809,31 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
     cleanTheBalls()
   }
 
+  function applySettingsInAdvertising({
+    folder,
+    fileStartToShow = 0,
+    frameDurationTime = 0,
+  }: ArgumentsOfApplySettingsInAdvertising) {
+    if (!folder) {
+      console.error(
+        'in function applySettingsInAdvertising, the value of folder is:',
+        folder,
+        ' Please, verifiy why folder of advertising settins is',
+        folder,
+      )
+      return
+    }
+
+    const data: any = localStorage.getItem(folder)
+    const dataJSON = JSON.parse(data)
+    const dataArray = Object.keys(dataJSON).map((i) => dataJSON[Number(i)])
+
+    pathAdvertising.current = dataArray[fileStartToShow]
+    assets.current = dataArray.map((path: string) => path)
+    advertisingFolder.current = folder
+    frameDuration.current = frameDurationTime
+  }
+
   useEffect(() => {
     updateBar(-1, 0, true)
   }, [])
@@ -834,6 +880,11 @@ export function ScoreContextProvider({ children }: ScoreContextProviderProps) {
         currentMinBet,
         currentMaxBet,
         currentMaxTie,
+        applySettingsInAdvertising,
+        frameDuration,
+        pathAdvertising,
+        assets,
+        advertisingFolder,
       }}
     >
       {children}
